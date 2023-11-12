@@ -1,6 +1,6 @@
 Sourcetree的使用
 ====
-####  一、 复制需要的项目HTTPS地址
+####  一、 从github复制需要的项目HTTPS地址
 ![4](https://github.com/xieyangp/notes/blob/main/image/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-11-11%20151631.png) 
 ####  二、 打开sourcetree的clone将复制的HTTPS粘贴到源地址，建立本地库
 ![4](https://github.com/xieyangp/notes/blob/main/image/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-11-11%20152255.png) 
