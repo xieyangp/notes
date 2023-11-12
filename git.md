@@ -1,6 +1,7 @@
 Sourcetree的使用
 ====
 ####  一、 复制需要的项目HTTPS地址
+            <img src="[http://static.runoob.com/images/runoob-logo.png](https://github.com/xieyangp/notes/blob/main/image/%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE%202023-11-11%20151631.png)" width="50%">
 ####  二、 打开sourcetree的clone将复制的HTTPS粘贴到源地址，建立本地库
 ####  三、在本地建立空的文件夹放Clone的项目，浏览新建的文件夹，将地址复制或通过浏览找到文件地址
             
