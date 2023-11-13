@@ -21,7 +21,15 @@
     1. 瞬态 ( transient ):每次被请求的被请求的时候都会创建一个新的对象。优点：避免多段代码用于同一个对象而造成对象状态混乱；缺点：生成的对象多，容易浪费内存。（谨慎使用）
     2. 范围( scoped ):在给定的范围，多次请求共享同一个服务对象，服务每次被请求的时候都会返回同一个对象；在不同范围内，服务每次被请求的时候会返回不同的对象。范围可以框架定义，也可以自己定义；在ASP.NET Core中，服务范围默认是一次HTTP请求，也就是在同一次HTTP请求中，不同的注入会获得同一个对象。适用于在同一范围内共享同一个对象的情况。
     3. 单例 ( singleton ):全局共享一个服务对象。适用于服务无状态对象。
-####        总结：服务对象无状态用单例（singleton），一个对象有状态且在框架环境中有范围控制用范围（scoped）；瞬态（transient）尽量在子范围中使用它们，而不要在跟范围中使用它们，控制不好容易造成内存泄漏；
+####    autofac中的生命周期：
+    1.InstancePerDependency：每个服务请求都会返回一个唯一的实例。如果未指定其他选项，则这是默认值。
+    2.SingleInstance：从根作用域和所有嵌套作用域中的所有请求返回一个实例。
+    3.InstancePerLifetimeScope：在每个生命周期范围内创建一个实例，不同生命周期范围中的实例是独立的。
+    4.InstancePerOwned：在每个 Owned 实例中创建一个实例，Owned 实例是通过 Owned<T> 类型创建的。
+    5.InstancePerMatchingLifetimeScope：在匹配的生命周期范围内创建一个实例，如果没有匹配的生命周期范围，则行为类似于 InstancePerDependency。
+    6.InstancePerRequest：在每个 HTTP 请求中创建一个实例，适用于  ASP.NET Web 表单和MVC应用程序。
+    
+####    总结：服务对象无状态用单例（singleton），一个对象有状态且在框架环境中有范围控制用范围（scoped）；瞬态（transient）尽量在子范围中使用它们，而不要在跟范围中使用它们，控制不好容易造成内存泄漏；
 ####    线程与进程：https://blog.csdn.net/mu_wind/article/details/124616643?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522169906756716800180649256%2522%252C%2522scm%2522%253A%252220140713.130102334..%2522%257D&request_id=169906756716800180649256&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-124616643-null-null.142^v96^pc_search_result_base9&utm_term=%E7%BA%BF%E7%A8%8B%E5%92%8C%E8%BF%9B%E7%A8%8B%E7%9A%84%E5%8C%BA%E5%88%AB&spm=1018.2226.3001.4187
 ####    配置Autofac
 ####    一、引用Autofac所需要的包：
