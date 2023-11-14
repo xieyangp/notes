@@ -8,8 +8,8 @@ Mediator
         3.一组对象定义良好但是需要复杂的方式进行通信，产生的依赖关系导致结构混乱。
         4.一个对象引用其它很多对象，并且直接通信，导致难以复用该对象。
         5.想定制一个分布在多个类中的行为，而不想依赖太多子类。
-##  Mediator工作原理图：
-![工作原理图](https://github.com/xieyangp/notes/blob/main/image/Mediator/Mediator.png)
+##  Mediator原理图：
+![工作原理图]([https://github.com/xieyangp/notes/blob/main/image/Mediator/Mediator.png](https://github.com/xieyangp/notes/blob/main/image/Mediator/mediator1.png))
 ##  图解：
         Mediator：定义一个接口，用于其它Colleague进行通信。
         Colleague：同事接口，与其它同事通信时依靠Mediator进行通信。
