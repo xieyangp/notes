@@ -14,4 +14,14 @@ Mediator
         Mediator：定义一个接口，用于其它Colleague进行通信。
         Colleague：同事接口，与其它同事通信时依靠Mediator进行通信。
         ConcreteMediator：具体中介者，了解并维护各个Colleague，协调它们的通信行为。
-  
+
+Mediator.Net.Unity 这个包提供了与Unity依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与Unity容器进行集成。这样可以利用Unity容器的功能来管理中介者和处理程序的生命周期和依赖注入。
+
+Mediator.Net.StructureMap 这个包提供了与StructureMap依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与StructureMap容器进行集成。这样可以利用StructureMap容器的功能来管理中介者和处理程序的生命周期和依赖注入。
+
+Mediator.Net.Uni 这个包提供了一种与不同依赖注入容器集成的通用方法，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与不同的依赖注入容器进行集成。这样可以根据具体的情况选择合适的依赖注入容器，并将其与Mediator.Net集成起来。
+
+总的来说，这些扩展包为Mediator.Net中介者库提供了更多的灵活性和可扩展性，使其可以与不同的依赖注入容器进行集成，以满足不同项目的需求。
+
+
+ConfigureAwait(false)：是告诉程序在异步操作完成后是否需要返回到原先的上下文中继续执行。在这种情况下，传入false表示不需要返回到原先的上下文中，可以在任何上下文中继续执行后续操作。这对于避免死锁和提高性能非常有用。
