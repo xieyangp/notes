@@ -9,11 +9,12 @@ Mediator
         4.一个对象引用其它很多对象，并且直接通信，导致难以复用该对象。
         5.想定制一个分布在多个类中的行为，而不想依赖太多子类。
 ##  Mediator原理图：
-![工作原理图]([https://github.com/xieyangp/notes/blob/main/image/Mediator/Mediator.png](https://github.com/xieyangp/notes/blob/main/image/Mediator/mediator1.png))
+![工作原理图](https://github.com/xieyangp/notes/blob/main/image/Mediator/mediator1.png)
 ##  图解：
-        Mediator：定义一个接口，用于其它Colleague进行通信。
-        Colleague：同事接口，与其它同事通信时依靠Mediator进行通信。
-        ConcreteMediator：具体中介者，了解并维护各个Colleague，协调它们的通信行为。
+        Mediator：发送命令至GlobalReceivePipe；
+        Global Receive Pipe：通过发送参数继承于什么类型的接口分配到各通道；
+        CommandReceivePipe：
+       
 
 Mediator.Net.Unity 这个包提供了与Unity依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与Unity容器进行集成。这样可以利用Unity容器的功能来管理中介者和处理程序的生命周期和依赖注入。
 
