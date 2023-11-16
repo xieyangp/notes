@@ -12,9 +12,12 @@ Mediator
 ![工作原理图](https://github.com/xieyangp/notes/blob/main/image/Mediator/mediator1.png)
 ##  图解：
         Mediator：发送命令至GlobalReceivePipe；
-        Global Receive Pipe：通过发送参数继承于什么类型的接口分配到各通道；
-        CommandReceivePipe：
-       
+        GlobalReceivePipe: 通过发送参数继承于什么类型的接口分配到各通道；
+        CommandReceivePipe: 传输继承Icommand接口的命令至事件处理器中(CommandHandler);我们用于发送增删改命令
+        RequesteReceivePipe: 传输继承IRequest接口的命令至事件处理器中(RequestHandler);我们用于发送查询命令
+        EventReceivePipe: 传输继承IEvent接口的命令至事件处理器中(EventHandler);
+        Handler: 程序处理器：处理各种命令，以及发布消息；
+        publishPipe: 传输继续IEvent接口的事件，我们通常用于处理后续事件或命令，没有则结束；  
 ##  Mediator配置步骤：
         一、引用Mediator.Net与Mediator.Net.Autofac包；Mediator.Net包作用：提供了一种中介者模式的实现；提供中介者模式封装的接口和方法、类，如消息传递、事件处理、命令调度；Mediator.Net.Autofac的作用:提供依赖注入；1.注册中介者和处理程序；2.中介者和处理程序的解析；3.中介者和处理程序的生命周期管理；
         二、在Module中注册Mediator：
@@ -24,13 +27,77 @@ Mediator
         var mediatorBuidler = new MediatorBuilder();
 
         mediatorBuidler.RegisterHandlers(_assemblies);
-
+0
         builder.RegisterMediator(mediatorBuidler);
     }
 ```
- 
+##  Mediator的使用步骤：
+###  1.创建命令、请求，如果有响应则创建对应的响应
+```C#
+        //创建命令
+        public class CreateFoodCommand : ICommand
+        {
+            public CreateFoodDto Food { get; set; }
+        }
+        //创建命令的响应
+        public class CreateFoodResponse : IResponse
+        {
+            public string Result { get; set; }
+        }
 
+        //创建请求
+        public class PongResponse : IResponse
+        {
+            public string Message { get; set; }
+        }
+```
+###  2.发布命令：发布命令的方法有如下几种：
+```C#
+        await _mediator.SendAsync(new TestBaseCommand(Guid.NewGuid()));//无响应命令
+        await _mediator.SendAsync<Command,Response>(command)//有响应命令；Command:ICommand类型的命令类型，Response：IRsponse类型的结果类型；command：ICommand类型的命令实体；
+        await _mediator.RequestAsync<Request, Response>(new GetGuidRequest(_guid));//有响应请求；Request:IRequest类型的命令类型，Response：IRsponse类型的结果类型，Request:IRequest类型的命令实体；
+        await _mediator.Publish(Event);//发布事件；Event：继续IEvent的事件实体；
+```
+###  3.创建Handler
+```C#
+        //创建命令Handler，CreateFoodCommand：命令类型；CreateFoodResponse：响应类型；
+        public class CreateFoodCommandHandler : ICommandHandler<CreateFoodCommand, CreateFoodResponse>
+        {
+            private readonly IFoodService _foodService;
+        
+            public CreateFoodCommandHandler(IFoodService foodService)
+            {
+                _foodService = foodService;
+            }
+        
+            public async Task<CreateFoodResponse> Handle(IReceiveContext<CreateFoodCommand> context, CancellationToken cancellationToken)
+            {
+                var @event = await _foodService.CreateFoodAsync(context.Message, cancellationToken).ConfigureAwait(false);
+                //发布事件
+                await context.PublishAsync(@event, cancellationToken).ConfigureAwait(false);
+        
+                return new CreateFoodResponse
+                {
+                    Result = @event.Result
+                };
+            }
+        }
+```
+###  4.创建事件
+```C#
+        public class CreateFoodEvent : IEvent
+        {
+            public string Result { get; set; }
+        }
 
+        public class CreateFoodEventHandler : IEventHandler<CreateFoodEvent>
+        {
+            public Task Handle(IReceiveContext<CreateFoodEvent> context, CancellationToken cancellationToken)
+            {
+                return Task.CompletedTask;
+            }
+        }
+```
 
         
 Mediator.Net.Unity 这个包提供了与Unity依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与Unity容器进行集成。这样可以利用Unity容器的功能来管理中介者和处理程序的生命周期和依赖注入。
