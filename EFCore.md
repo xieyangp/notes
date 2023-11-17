@@ -24,7 +24,7 @@ EF Core
   如上图 有一个Action需要调用很多Service 然后 Service之间又相互调用，在开启Action时 其实是想开启一个事务，但是某些内部代码有可能自己去开启了事务。相互之间调用管理起来非常麻烦。经常出现不可估计的问题。如果有一个集中管理的地方就好很多。比如在Action这里启动一个工作单元，后续所有的业务都使用同一个事务 和 DbContext，这才是我们的预期的。  
   3、如何使用工作单元
   
-## UnifyResponseSpacification
+## UnifyResponseSpacification 中间件规范类
 ```C#
 //这段代码是一个实现了IPipeSpecification接口的泛型类UnifyResponseSpecification<TContext>。该类用于统一处理响应，包括在执行前、执行中、执行后以及出现异常时的处理。
 public class UnifyResponseSpecification<TContext> : IPipeSpecification<TContext>
@@ -80,4 +80,12 @@ public class UnifyResponseSpecification<TContext> : IPipeSpecification<TContext>
             }
         }
 
+```
+## DatabaseFacade
+```
+    DatabaseFacade是Entity Framework Core中的一类，它提供了对数据库连接和交互的访问。它允许开发人员在应用程序中执行各种数据库操作，如执行原始SQL查询、执行存储过程、管理等事务。DatabaseFacade还提供了对数据库连接状态的管理和监控，以及对数据库架构和元数据的访问。
+
+    DatabaseFacade，开发人员可以在应用程序中直接访问和操作数据库，而不必直接依赖于特定的数据库提供程序或连接器。这使得应用程序的数据库交互变得更加灵活和可扩展，同时也提供了更多多种控制和性能优化的可能性。
+    
+    总之，DatabaseFacade提供了对数据库连接和操作的统一访问接口，使得开发人员可以更方便地管理和执行数据库相关的任务。
 ```
