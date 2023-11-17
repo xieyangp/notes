@@ -8,16 +8,16 @@ Mediator
         3.一组对象定义良好但是需要复杂的方式进行通信，产生的依赖关系导致结构混乱。
         4.一个对象引用其它很多对象，并且直接通信，导致难以复用该对象。
         5.想定制一个分布在多个类中的行为，而不想依赖太多子类。
-##  Mediator原理图：
+##  Mediator管道图：
 ![工作原理图](https://github.com/xieyangp/notes/blob/main/image/Mediator/mediator1.png)
-##  图解：
+##  管道作用：
         Mediator：发送命令至GlobalReceivePipe；
-        GlobalReceivePipe: 通过发送参数继承于什么类型的接口分配到各通道；
-        CommandReceivePipe: 传输继承Icommand接口的命令至事件处理器中(CommandHandler);我们用于发送增删改命令
-        RequesteReceivePipe: 传输继承IRequest接口的命令至事件处理器中(RequestHandler);我们用于发送查询命令
-        EventReceivePipe: 传输继承IEvent接口的命令至事件处理器中(EventHandler);
-        Handler: 程序处理器：处理各种命令，以及发布消息；
-        publishPipe: 传输继续IEvent接口的事件，我们通常用于处理后续事件或命令，没有则结束；  
+        GlobalReceivePipe: 每当消息在到达下一个管道和处理程序之前发送、发布或请求时，都会触发此管道；
+        CommandReceivePipe: 接收Icommand接口的命令至处理程序(CommandHandler);我们用于发送增删改命令
+        RequesteReceivePipe: 接收IRequest接口的命令至处理程序(RequestHandler);我们用于发送查询命令
+        EventReceivePipe: 接收IEvent接口的命令至处理程序中(EventHandler);
+        Handler: 处理程序，处理各种命令，以及发布消息；
+        publishPipe: 接收IEvent接口的事件，我们通常用于处理后续事件或命令，没有则结束；  
 ##  Mediator配置步骤：
         一、引用Mediator.Net与Mediator.Net.Autofac包；Mediator.Net包作用：提供了一种中介者模式的实现；提供中介者模式封装的接口和方法、类，如消息传递、事件处理、命令调度；Mediator.Net.Autofac的作用:提供依赖注入；1.注册中介者和处理程序；2.中介者和处理程序的解析；3.中介者和处理程序的生命周期管理；
         二、在Module中注册Mediator：
