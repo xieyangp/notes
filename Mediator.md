@@ -99,6 +99,104 @@ Mediator
         }
 ```
 
+##  添加中间件
+1.添加中间件的静态类
+```C#
+  public static class UnitOfWorkMiddleWare
+  {
+      //在管道配置器中添加一个工作单元的规范
+      public static void UseUnitOfWork<TContext>(this IPipeConfigurator<TContext> configurator,
+          IUnitOfWork unitOfWork = null) where TContext : IContext<IMessage>
+      {
+          //检查是否提供了工作单元实例以及是否配置了依赖范围。如果都没有提供工作单元实例并且依赖范围也没有配置，则会抛出一个DependencyScopeNotConfiguredException异常。
+          if (unitOfWork == null && configurator.DependencyScope == null)
+          {
+              throw new DependencyScopeNotConfiguredException(
+                  $"{nameof(unitOfWork)} is not provided and IDependencyScope is not configured, Please ensure {nameof(unitOfWork)} is registered properly if you are using IoC container, otherwise please pass {nameof(unitOfWork)} as parameter");
+          }
+
+          //如果没有提供工作单元实例，则方法会尝试从依赖范围中解析出IUnitOfWork实例。如果依赖范围中没有配置IUnitOfWork实例，则会抛出异常。
+          unitOfWork ??= configurator.DependencyScope.Resolve<IUnitOfWork>();
+
+          //管道配置器中的规范中，以便在管道执行过程中使用工作单元
+          configurator.AddPipeSpecification(new UnifyOfWorkSpacification<TContext>(unitOfWork));
+      }
+  }
+```
+2.添加规范类，在管道中加入中间件时，中间件也要满足管道的一个规范；
+```C#
+//这段代码是一个实现了IPipeSpecification接口的泛型类UnifyResponseSpecification<TContext>。该类用于统一处理响应，包括在执行前、执行中、执行后以及出现异常时的处理。
+public class UnifyResponseSpecification<TContext> : IPipeSpecification<TContext>
+        where TContext : IContext<IMessage>
+    {
+        //确定是否应该执行响应处理。在这个实现中，始终返回true，即始终执行响应处理。
+        public bool ShouldExecute(TContext context, CancellationToken cancellationToken)
+        {
+            return true;
+        }
+        //在执行之前调用
+        public Task BeforeExecute(TContext context, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+        //执行响应处理
+        public Task Execute(TContext context, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+        //执行后调用,调用EnrichResponse方法来丰富响应信息，然后返回一个已完成的Task。
+        public Task AfterExecute(TContext context, CancellationToken cancellationToken)
+        {
+            EnrichResponse(context, null);
+
+            return Task.CompletedTask;
+        }
+        //出现异常时调用,同样调用EnrichResponse方法来丰富响应信息
+        public Task OnException(Exception ex, TContext context)
+        {
+            EnrichResponse(context, ex);
+
+            ExceptionDispatchInfo.Capture(ex).Throw();
+
+            throw ex;
+        }
+        //EnrichResponse方法用于丰富响应信息，根据是否出现异常来设置响应的状态码和消息。如果未出现异常，则将状态码设置为OK，消息设置为OK；如果出现异常，则将状态码设置为InternalServerError，消息设置为异常的消息。
+        private void EnrichResponse(TContext context, Exception ex)
+        {
+            if (!ShouldExecute(context, default) || context.Result is not CommonResponse) return;
+
+            var response = (dynamic)context.Result;
+
+            if (ex == null)
+            {
+                response.Code = HttpStatusCode.OK;
+                response.Msg = nameof(HttpStatusCode.OK).ToLower();
+            }
+            else
+            {
+                response.Code = HttpStatusCode.InternalServerError;
+                response.Msg = ex.Message;
+            }
+        }
+```
+3.注册中间件
+```C#
+  private void RegisterMediator(ContainerBuilder builder)
+    {
+        var mediatorBuidler = new MediatorBuilder();
+
+        mediatorBuidler.RegisterHandlers(_assemblies);
+
+        //注册中间件
+        mediatorBuidler.ConfigureGlobalReceivePipe(x =>
+        {
+            x.UseUnitOfWork();
+            x.UseUnifyResponse();
+        });
+
+        builder.RegisterMediator(mediatorBuidler);
+    }
+```
         
 Mediator.Net.Unity 这个包提供了与Unity依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与Unity容器进行集成。这样可以利用Unity容器的功能来管理中介者和处理程序的生命周期和依赖注入。
 
