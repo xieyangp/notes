@@ -1,5 +1,23 @@
 EF Core
 ====
+## EF Core一些概念：
+```
+    对象关系映射(ORM):ORM框架可以将数据库表中的数据映射为对象，使开发人员能够使用面向对象的编程语言（如Java、C#等）来操作数据库，而不需要直接编写SQL语句。
+ORM框架通常提供了一种简单的方式来执行数据库查询、插入、更新和删除操作，同时隐藏了底层数据库操作的细节。
+
+    实体(Entity)：在EF Core中，实体代表了数据库中的表或集合的模型。每个实体对应数据库中的一条记录。
+
+    上下文（Context）：上下文是应用程序与数据库之间的桥梁，它包含了实体的集合以及用于配置和执行对数据库的操作的方法。
+
+    映射（Mapping）：映射定义了实体类和数据库表之间的映射关系，包括字段名、数据类型、关联关系等。
+
+    查询（Query）：EF Core提供了丰富的查询功能，可以使用LINQ或原生SQL语句来进行数据查询。
+
+    变更跟踪（Change Tracking）：EF Core能够跟踪实体对象的变更，并将这些变更同步到数据库中。
+
+    数据迁移（Data Migration）：EF Core支持数据迁移功能，可以通过代码来管理数据库结构的变更，而不需要手动编写SQL脚本。
+```
+[EF Core官网](https://learn.microsoft.com/zh-cn/ef/core/)
 ## 一、引入基础包Microsoft.EntityFrameworkCore、根据你使用的数据库类型引用对应的包，这里我使用Mysql则引用Pomelo.EntityFrameworkCore.MySql。  
 
 [!微软数据库提供程序网址](https://learn.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-clia)
