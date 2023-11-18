@@ -22,12 +22,71 @@ ORM框架通常提供了一种简单的方式来执行数据库查询、插入�
 
 ###   1、引入基础包Microsoft.EntityFrameworkCore、根据你使用的数据库类型引用对应的包，这里我使用Mysql则引用Pomelo.EntityFrameworkCore.MySql。  
         
-###   2、创建一个Context类，继承DbContext，重写OnConfiguring和OnModelCreating方法；
+###   2、创建一个Context类，继承DbContext，重写OnConfiguring(配置数据库)和OnModelCreating(配置实体)方法；
+```C#
+public class PratiseForJohnnyDbContext : DbContext, IUnitOfWork
+{
+    //通过依赖注入数据库链接
+    private readonly ConnectionString _connectionString;
 
+    public PratiseForJohnnyDbContext(ConnectionString connectionString)
+    {
+        _connectionString = connectionString;
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseMySql(_connectionString.Value,new MySqlServerVersion(new Version(8,2,0)));
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        typeof(PratiseForJohnnyDbContext).GetTypeInfo().Assembly.GetTypes()
+            .Where(t => typeof(IEntity).IsAssignableFrom(t) && t.IsClass).ToList()
+            .ForEach(x =>
+            {
+                if (modelBuilder.Model.FindEntityType(x) == null)
+                    modelBuilder.Model.AddEntityType(x);
+            });
+    }
+}
+
+//配置文件配置依赖注入，
+//一、创建一个配置接口；
+public interface IConfiguartionSetting
+{
+}
+
+public interface IConfiguartionSetting<TValue> : IConfiguartionSetting
+{
+    TValue Value { get; set; }
+}
+
+//二、创建一个类实现接口；
+
+ public class ConnectionString : IConfiguartionSetting<string>
+{
+    public string Value { get; set; }
+            
+    public ConnectionString(IConfiguration configuration)
+    {
+       Value = configuration.GetConnectionString("Default");
+    }
+}
+//三、在Module注册
+private void RegisterSettings(ContainerBuilder builder)
+{
+    var settingTypes = typeof(PratiseForJohnnyDbContext).Assembly.GetTypes()
+    .Where(t => t.IsClass && typeof(IConfiguartionSetting).IsAssignableFrom(t))
+    .ToArray();
+        
+     builder.RegisterTypes(settingTypes).AsSelf().SingleInstance();
+}
+```
 ###   3、创建实体、并且在context注册实体
 ###   4、更具项目是数据驱动开发还是模型驱动开发，选择读取数据库或数据迁移
 
-[!微软数据库提供程序网址](https://learn.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-clia)
+[微软数据库提供程序网址](https://learn.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-clia)
 
 ## 二、DbContext的
 
