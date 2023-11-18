@@ -84,6 +84,32 @@ private void RegisterSettings(ContainerBuilder builder)
 }
 ```
 ###   3、创建实体、并且在context注册实体
+```C#
+//创建实体
+[Table("Foods")]
+public class Foods : IEntity
+{
+    [Key] 
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int Id { get; set; }
+
+    public string Name { get; set; }
+
+    public string Color { get; set; }
+}
+
+//注册实体
+ protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        typeof(PratiseForJohnnyDbContext).GetTypeInfo().Assembly.GetTypes()
+            .Where(t => typeof(IEntity).IsAssignableFrom(t) && t.IsClass).ToList()
+            .ForEach(x =>
+            {
+                if (modelBuilder.Model.FindEntityType(x) == null)
+                    modelBuilder.Model.AddEntityType(x);
+            });
+    }
+```
 ###   4、更具项目是数据驱动开发还是模型驱动开发，选择读取数据库或数据迁移
 
 [微软数据库提供程序网址](https://learn.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-clia)
