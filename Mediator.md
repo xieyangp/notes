@@ -19,9 +19,12 @@ Mediator
         Handler: 处理程序，处理各种命令，以及发布消息；
         publishPipe: 接收IEvent接口的事件，我们通常用于处理后续事件或命令，没有则结束；  
 ##  Mediator配置步骤：
-        一、引用Mediator.Net与Mediator.Net.Autofac包；
-                Mediator.Net包作用：提供了一种中介者模式的实现；提供中介者模式封装的接口和方法、类，如消息传递、事件处理、命令调度；                                 Mediator.Net.Autofac的作用:提供依赖注入；
-        二、在Module中注册Mediator：
+一、引用Mediator.Net与Mediator.Net.Autofac包；  
+```
+        Mediator.Net包作用：提供了一种中介者模式的实现；提供中介者模式封装的接口和方法、类，如消息传递、事件处理、命令调度;  
+        Mediator.Net.Autofac的作用:提供依赖注入;
+```
+二、在Module中注册Mediator：
 ```C#
  private void RegisterMediator(ContainerBuilder builder)
     {
