@@ -19,7 +19,8 @@ Mediator
         Handler: 处理程序，处理各种命令，以及发布消息；
         publishPipe: 接收IEvent接口的事件，我们通常用于处理后续事件或命令，没有则结束；  
 ##  Mediator配置步骤：
-        一、引用Mediator.Net与Mediator.Net.Autofac包；Mediator.Net包作用：提供了一种中介者模式的实现；提供中介者模式封装的接口和方法、类，如消息传递、事件处理、命令调度；Mediator.Net.Autofac的作用:提供依赖注入；1.注册中介者和处理程序；2.中介者和处理程序的解析；3.中介者和处理程序的生命周期管理；
+        一、引用Mediator.Net与Mediator.Net.Autofac包；
+                Mediator.Net包作用：提供了一种中介者模式的实现；提供中介者模式封装的接口和方法、类，如消息传递、事件处理、命令调度；                                 Mediator.Net.Autofac的作用:提供依赖注入；
         二、在Module中注册Mediator：
 ```C#
  private void RegisterMediator(ContainerBuilder builder)
@@ -27,7 +28,7 @@ Mediator
         var mediatorBuidler = new MediatorBuilder();
 
         mediatorBuidler.RegisterHandlers(_assemblies);
-0
+
         builder.RegisterMediator(mediatorBuidler);
     }
 ```
@@ -83,7 +84,7 @@ Mediator
             }
         }
 ```
-###  4.创建事件
+###  4.创建事件和事件Handler
 ```C#
         public class CreateFoodEvent : IEvent
         {
@@ -197,7 +198,7 @@ public class UnifyResponseSpecification<TContext> : IPipeSpecification<TContext>
         builder.RegisterMediator(mediatorBuidler);
     }
 ```
-        
+## 一些中间件： 
 Mediator.Net.Unity 这个包提供了与Unity依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与Unity容器进行集成。这样可以利用Unity容器的功能来管理中介者和处理程序的生命周期和依赖注入。
 
 Mediator.Net.StructureMap 这个包提供了与StructureMap依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与StructureMap容器进行集成。这样可以利用StructureMap容器的功能来管理中介者和处理程序的生命周期和依赖注入。
