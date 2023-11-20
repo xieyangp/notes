@@ -95,6 +95,6 @@ public class Scripts0002_initial_tables : IScript
 
 ```
 ## 四、迁移之后，可以在数据库工具看到一个额外的表（schemaversions），可以理解为迁移记录表，里面记录了你迁移脚步名和时间，但你在次迁移的时候它会通过这个表过滤已经执行的脚本，避免重复执行：
-![数据记录表]()
+![数据记录表](https://github.com/xieyangp/notes/blob/main/image/DbUp/%E8%BF%81%E7%A7%BB.png)
 ## 五、学习网址
 [DbUp官网网址](https://dbup.readthedocs.io/en/latest/)
