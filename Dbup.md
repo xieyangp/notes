@@ -81,17 +81,17 @@ public class Scripts0002_initial_tables : IScript
 ```
 ### 4、在program的main中创建一个dbup类，将我们之前从配置文件中读取的数据库字符串通过构造方法赋值，再执行run方法：
 ```C#
-    public static void Main(string[] args)
-    {
-        var configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .AddEnvironmentVariables()
-            .Build();
+public static void Main(string[] args)
+{
+    var configuration = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json")
+        .AddEnvironmentVariables()
+        .Build();
         
-        new DbUpRunner(new ConnectionString(configuration).Value).Run();
+    new DbUpRunner(new ConnectionString(configuration).Value).Run();
         
-        CreateHostBuilder(args).Build().Run();
-    }
+    CreateHostBuilder(args).Build().Run();
+}
 
 ```
 ## 四、迁移之后，可以在数据库工具看到一个额外的表（schemaversions），可以理解为迁移记录表，里面记录了你迁移脚步名和时间，但你在次迁移的时候它会通过这个表过滤已经执行的脚本，避免重复执行：
