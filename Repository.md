@@ -173,9 +173,9 @@ public class EfRepository : IRepository
 ```
 3。在module注入
 ```C#
- private void RegisterDbContext(ContainerBuilder builder)
-    {   
-        builder.RegisterType<EfRepository>().As<IRepository>().InstancePerLifetimeScope();//注入Repository
-    }
+private void RegisterDbContext(ContainerBuilder builder)
+{   
+    builder.RegisterType<EfRepository>().As<IRepository>().InstancePerLifetimeScope();//注入Repository
+}
 ```
 
