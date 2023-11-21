@@ -1,22 +1,33 @@
 ## 一、Dbup：一个数据迁移工具；
 ## 二、脚步类别
-### 静态脚本提供者： 
-WithScript, WithScripts  
+### 静态脚本提供者：
+```
+WithScript, WithScripts
+```
 #### 工作方式：
+```
 1.静态脚本是指直接将脚本文件作为参数传递给DbUp的方法。  
 2.这些脚本文件可以是SQL脚本文件，也可以是其他类型的脚本文件。  
 3.DbUp会按照指定的顺序执行这些脚本文件，以完成数据库升级的操作。  
-
+```
 ### 嵌入式脚本提供者：
+```
 WithScriptsEmbeddedInAssembly, WithScriptsEmbeddedInAssemblies
+```
 #### 工作方式：
+```
 1.嵌入式脚本是指将脚本文件嵌入到程序集中，然后通过程序集来提供脚本。  
-2.DbUp会从指定的程序集中提取嵌入式脚本，并按照指定的顺序执行这些脚本。  
+2.DbUp会从指定的程序集中提取嵌入式脚本，并按照指定的顺序执行这些脚本。
+```
 ### 文件系统脚本提供者：
+```
 WithScriptsFromFileSystem
+```
 #### 工作方式：
+```
 1.文件系统脚本是指将脚本文件存储在文件系统中，然后通过文件系统路径来提供脚本。  
-2.DbUp会从指定的文件夹中读取脚本文件，并按照指定的顺序执行这些脚本。  
+2.DbUp会从指定的文件夹中读取脚本文件，并按照指定的顺序执行这些脚本。
+``` 
 ## 三、使用流程
 ### 1.引用DbUp的包，分别是dbup-core，dbup-mysql，这里我使用mysql所以引用mysql，如果用其他数据库语言则引用对应的dbup支持包。
 ### 2.创建一个类，里面配置迁移的一些规定等，如迁移日志、迁移脚步的读取方式等：
@@ -38,7 +49,7 @@ public class DbUpRunner
 
         var upgradeEngine = DeployChanges.To.MySqlDatabase(_connectionString)
             .WithScriptsAndCodeEmbeddedInAssembly(typeof(DbUpRunner).Assembly, s => s.EndsWith(".cs"))
-            .WithScriptsFromFileSystem(outPutDirectory, new FileSystemScriptOptions{ IncludeSubDirectories = true, Filter = s => s.EndsWith(".sql") })
+            .WithScriptsFromFileSystem(outPutDirectory)//使用WithScriptsFromFileSystem默认选择以.sql结尾的文件
             .WithTransaction()//用于在执行脚本时启用事务。它确保在执行脚本期间，如果发生错误，将回滚所有已执行的更改
             .LogToAutodetectedLog()//用于自动检测并配置日志记录器。它根据可用的日志记录库自动选择适当的日志记录器。
             .LogToConsole()//将日志输出到控制台
