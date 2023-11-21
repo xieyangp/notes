@@ -111,20 +111,8 @@ public class Foods : IEntity
     }
 ```
 ###   4、根据项目是数据驱动开发还是模型驱动开发，选择读取数据库或数据迁移
-#### 数据驱动
-```C#
-```
-####模型驱动开发
-```C#
-```
+#### [模型驱动开发](https://github.com/xieyangp/notes/blob/main/Dbup.md) 
 
-##  三.UnitOfWork工作单元模式
-  1、工作单元作用：跨多个请求的业务，统一管理事务，统一提交。  
-  2、我们经常的代码都是分层的，有可能到处都在 new DbContext(options)，这是就要面对如何管理这些DbContext，在AspNetCore中 services.AddDbContext<>默认是用的Scope的作用域，也就是每次HttpRequest，比以前好了很多。但是事务这些管理还是很麻烦。  
-  ![unitwork工作原理图](https://github.com/xieyangp/notes/blob/main/image/EFCore/unitwork.png)  
-  如上图 有一个Action需要调用很多Service 然后 Service之间又相互调用，在开启Action时 其实是想开启一个事务，但是某些内部代码有可能自己去开启了事务。相互之间调用管理起来非常麻烦。经常出现不可估计的问题。如果有一个集中管理的地方就好很多。比如在Action这里启动一个工作单元，后续所有的业务都使用同一个事务 和 DbContext，这才是我们的预期的。  
-  3、如何使用工作单元
-  
 #### DatabaseFacade
 ```
     DatabaseFacade是Entity Framework Core中的一类，它提供了对数据库连接和交互的访问。它允许开发人员在应用程序中执行各种数据库操作，如执行原始SQL查询、执行存储过程、管理等事务。DatabaseFacade还提供了对数据库连接状态的管理和监控，以及对数据库架构和元数据的访问。
