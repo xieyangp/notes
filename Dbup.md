@@ -78,17 +78,16 @@ create table if not exists foods
 //代码脚本，创建一个类继承IScript，实现接口后，在ProvideScript的写sql
 public class Scripts0002_initial_tables : IScript
 {
-        public string ProvideScript(Func<IDbCommand> dbCommandFactory)
-        {
-            return @"create table if not exists Foods
-                        ( 
-                            Id int not null primary key AUTO_INCREMENT, 
-                            name varchar(50) not null,
-                            color varchar(100) not null
-                        ) charset=utf8mb4";
-        }
+    public string ProvideScript(Func<IDbCommand> dbCommandFactory)
+    {
+        return @"create table if not exists Foods
+                    ( 
+                        Id int not null primary key AUTO_INCREMENT, 
+                        name varchar(50) not null,
+                        color varchar(100) not null
+                    ) charset=utf8mb4";
+    }
 }
-//
 ```
 ### 4、在program的main中创建一个dbup类，将我们之前从配置文件中读取的数据库字符串通过构造方法赋值，再执行run方法：
 ```C#
