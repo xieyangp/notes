@@ -63,7 +63,6 @@ public interface IConfiguartionSetting<TValue> : IConfiguartionSetting
 }
 
 //二、创建一个类实现接口；
-
  public class ConnectionString : IConfiguartionSetting<string>
 {
     public string Value { get; set; }
@@ -73,6 +72,7 @@ public interface IConfiguartionSetting<TValue> : IConfiguartionSetting
        Value = configuration.GetConnectionString("Default");
     }
 }
+
 //三、在Module注册
 private void RegisterSettings(ContainerBuilder builder)
 {
@@ -111,9 +111,14 @@ public class Foods : IEntity
     }
 ```
 ###   4、根据项目是数据驱动开发还是模型驱动开发，选择读取数据库或数据迁移
+#### 数据驱动
+```C#
+```
+####模型驱动开发
+```C#
+```
 
-
-## Repository仓储模式的优缺点：
+### Repository仓储模式的优缺点：
   优点：
   
   1、CRUD达到了高度复用（把一些公共的调用数据库的方法剥离出来，减少冗余的代码）。
