@@ -65,3 +65,43 @@ IList<Destination> ilistDest = mapper.Map<Source[], IList<Destination>>(sources)
 List<Destination> listDest = mapper.Map<Source[], List<Destination>>(sources);
 Destination[] arrayDest = mapper.Map<Source[], Destination[]>(sources);
 ```
+### 5.处理空集合,映射集合属性时，如果源值为 null，AutoMapper 会将目标字段映射到空集合，而不是将目标值设置为 null。可以将AllowNullCollections属性设置为true将空值设置为null：
+```C#
+public class FoodMapping : Profile
+{
+    public FoodMapping()
+    {
+        AllowNullCollections = true;
+        
+        CreateMap<CreateFoodDto, Foods>().ReverseMap();
+    }
+}
+```
+### 6.集合中的多态元素类型,当源类型和目标类型都有子类，配置映射时用include将子类映射也配置一下且需要对子映射进行显式配置：
+```C#
+public class ParentSource
+{
+	public int Value1 { get; set; }
+}
+
+public class ChildSource : ParentSource
+{
+	public int Value2 { get; set; }
+}
+
+public class ParentDestination
+{
+	public int Value1 { get; set; }
+}
+
+public class ChildDestination : ParentDestination
+{
+	public int Value2 { get; set; }
+}
+
+var configuration = new MapperConfiguration(c=> {
+    c.CreateMap<ParentSource, ParentDestination>()
+	     .Include<ChildSource, ChildDestination>();
+    c.CreateMap<ChildSource, ChildDestination>();
+});
+```
