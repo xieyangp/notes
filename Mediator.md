@@ -193,28 +193,28 @@ public class UnifyResponseSpecification<TContext> : IPipeSpecification<TContext>
 ```
 3.注册中间件
 ```C#
-  private void RegisterMediator(ContainerBuilder builder)
-    {
-        var mediatorBuidler = new MediatorBuilder();
+ private void RegisterMediator(ContainerBuilder builder)
+ {
+      var mediatorBuidler = new MediatorBuilder();
 
-        mediatorBuidler.RegisterHandlers(_assemblies);
+      mediatorBuidler.RegisterHandlers(_assemblies);
 
-        //注册中间件
-        mediatorBuidler.ConfigureGlobalReceivePipe(x =>
-        {
-            x.UseUnitOfWork();
-            x.UseUnifyResponse();
-        });
+      //注册中间件
+      mediatorBuidler.ConfigureGlobalReceivePipe(x =>
+      {
+          x.UseUnitOfWork();
+          x.UseUnifyResponse();
+      });
 
-        builder.RegisterMediator(mediatorBuidler);
-    }
+      builder.RegisterMediator(mediatorBuidler);
+}
 ```
 ## 一些中间件： 
-Mediator.Net.Unity 这个包提供了与Unity依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与Unity容器进行集成。这样可以利用Unity容器的功能来管理中介者和处理程序的生命周期和依赖注入。
+1.Mediator.Net.Unity 这个包提供了与Unity依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与Unity容器进行集成。这样可以利用Unity容器的功能来管理中介者和处理程序的生命周期和依赖注入。
 
-Mediator.Net.StructureMap 这个包提供了与StructureMap依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与StructureMap容器进行集成。这样可以利用StructureMap容器的功能来管理中介者和处理程序的生命周期和依赖注入。
+2.Mediator.Net.StructureMap 这个包提供了与StructureMap依赖注入容器的集成，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与StructureMap容器进行集成。这样可以利用StructureMap容器的功能来管理中介者和处理程序的生命周期和依赖注入。
 
-Mediator.Net.Uni 这个包提供了一种与不同依赖注入容器集成的通用方法，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与不同的依赖注入容器进行集成。这样可以根据具体的情况选择合适的依赖注入容器，并将其与Mediator.Net集成起来。
+3.Mediator.Net.Uni 这个包提供了一种与不同依赖注入容器集成的通用方法，允许您在使用Mediator.Net中介者库时，将中介者和处理程序与不同的依赖注入容器进行集成。这样可以根据具体的情况选择合适的依赖注入容器，并将其与Mediator.Net集成起来。
 
 总的来说，这些扩展包为Mediator.Net中介者库提供了更多的灵活性和可扩展性，使其可以与不同的依赖注入容器进行集成，以满足不同项目的需求。
 
