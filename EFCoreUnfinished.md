@@ -125,7 +125,7 @@ public class Foods : IEntity
   如上图 有一个Action需要调用很多Service 然后 Service之间又相互调用，在开启Action时 其实是想开启一个事务，但是某些内部代码有可能自己去开启了事务。相互之间调用管理起来非常麻烦。经常出现不可估计的问题。如果有一个集中管理的地方就好很多。比如在Action这里启动一个工作单元，后续所有的业务都使用同一个事务 和 DbContext，这才是我们的预期的。  
   3、如何使用工作单元
   
-## DatabaseFacade
+#### DatabaseFacade
 ```
     DatabaseFacade是Entity Framework Core中的一类，它提供了对数据库连接和交互的访问。它允许开发人员在应用程序中执行各种数据库操作，如执行原始SQL查询、执行存储过程、管理等事务。DatabaseFacade还提供了对数据库连接状态的管理和监控，以及对数据库架构和元数据的访问。
 
@@ -133,5 +133,6 @@ public class Foods : IEntity
     
     总之，DatabaseFacade提供了对数据库连接和操作的统一访问接口，使得开发人员可以更方便地管理和执行数据库相关的任务。
 ```
+## 四、学习网站：
 [EF Core官网](https://learn.microsoft.com/zh-cn/ef/core/)   
 [微软数据库提供程序网址](https://learn.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-clia)
