@@ -17,7 +17,7 @@ ORM框架通常提供了一种简单的方式来执行数据库查询、插入�
 
     数据迁移（Data Migration）：EF Core支持数据迁移功能，可以通过代码来管理数据库结构的变更，而不需要手动编写SQL脚本。
 ```
-[EF Core官网](https://learn.microsoft.com/zh-cn/ef/core/)
+
 ## 二、EF Core 配置
 
 ###   1、引入基础包Microsoft.EntityFrameworkCore、根据你使用的数据库类型引用对应的包，这里我使用Mysql则引用Pomelo.EntityFrameworkCore.MySql。  
@@ -112,7 +112,7 @@ public class Foods : IEntity
 ```
 ###   4、更具项目是数据驱动开发还是模型驱动开发，选择读取数据库或数据迁移
 
-[微软数据库提供程序网址](https://learn.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-clia)
+
 
 ## 二、DbContext的
 
@@ -199,3 +199,5 @@ public class UnifyResponseSpecification<TContext> : IPipeSpecification<TContext>
     
     总之，DatabaseFacade提供了对数据库连接和操作的统一访问接口，使得开发人员可以更方便地管理和执行数据库相关的任务。
 ```
+[EF Core官网](https://learn.microsoft.com/zh-cn/ef/core/)
+[微软数据库提供程序网址](https://learn.microsoft.com/zh-cn/ef/core/providers/?tabs=dotnet-core-clia)
