@@ -119,6 +119,7 @@ public class SourceDto {
         get { return _value; }
     }
 }
+
 var configuration = new MapperConfiguration(cfg => cfg.CreateMap<Source, SourceDto>());
 
 var configuration = new MapperConfiguration(cfg =>
@@ -185,8 +186,8 @@ public class Customer
 
 public class OrderDto
 {
-     public string CustomerName { get; set; }
-     public decimal Total { get; set; }
+    public string CustomerName { get; set; }
+    public decimal Total { get; set; }
 }
 ```
 ### 9.ReverseMap配置反向映射，自定义反方向映射：ForPath
