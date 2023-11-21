@@ -130,4 +130,62 @@ var configuration = new MapperConfiguration(cfg => cfg.DisableConstructorMapping
 
 var configuration = new MapperConfiguration(cfg => cfg.ShouldUseConstructor = constructor => constructor.IsPublic);//配置目标对象考虑哪些构造函数，这里是只考虑公共构造函数
 ```
-### 8.扁平化
+### 8.扁平化；当希望将一个复杂的对象映射到一个简单的对象时，通常将复杂对象扁平化：
+```C#
+//复杂的对象
+public class Order
+{
+     private readonly IList<OrderLineItem> _orderLineItems = new List<OrderLineItem>();
+
+     public Customer Customer { get; set; }
+
+     public OrderLineItem[] GetOrderLineItems()
+     {
+         return _orderLineItems.ToArray();
+     }
+
+     public void AddOrderLineItem(Product product, int quantity)
+     {
+         _orderLineItems.Add(new OrderLineItem(product, quantity));
+     }
+
+     public decimal GetTotal()
+     {
+         return _orderLineItems.Sum(li => li.GetTotal());
+     }
+}
+
+public class Product
+{
+    public decimal Price { get; set; }
+    public string Name { get; set; }
+}
+
+public class OrderLineItem
+{
+    public OrderLineItem(Product product, int quantity)
+    {
+        Product = product;
+        Quantity = quantity;
+    }
+
+    public Product Product { get; private set; }
+    public int Quantity { get; private set;}
+
+    public decimal GetTotal()
+    {
+        return Quantity*Product.Price; 
+    }
+}
+
+public class Customer
+{
+    public string Name { get; set; }
+}
+
+public class OrderDto
+{
+     public string CustomerName { get; set; }
+     public decimal Total { get; set; }
+}
+```
