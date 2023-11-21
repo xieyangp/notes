@@ -9,4 +9,59 @@
 .CreateMap<Source, Destination>()
 	.ForMember(DestinationObject => DestinationObject.EventDate, SourceObject => SourceObject.MapFrom(SourceObject => SourceObject.Date.Date))
 ```
-### 3.
+### 3.当源类型中有复杂类型的时候，需要为复杂类型也进行映射配置。配置时候注意：配置类型的顺序并不重要，调用 Map 不需要指定任何内部类型映射，只需指定用于传入源值的类型映射：
+```C#
+public class OuterSource
+{
+	public int Value { get; set; }
+	public InnerSource Inner { get; set; }//复杂类型
+}
+
+public class InnerSource
+{
+	public int OtherValue { get; set; }
+}
+
+public class OuterDest
+{
+	public int Value { get; set; }
+	public InnerDest Inner { get; set; }//复杂类型
+}
+
+public class InnerDest
+{
+	public int OtherValue { get; set; }
+}
+
+var config = new MapperConfiguration(cfg => {
+    cfg.CreateMap<OuterSource, OuterDest>();
+    cfg.CreateMap<InnerSource, InnerDest>();
+});
+```
+### 4.AutoMapper 仅需要配置元素类型，而不需要配置任何可能使用的数组或列表类型。
+```C#
+public class Source
+{
+	public int Value { get; set; }
+}
+
+public class Destination
+{
+	public int Value { get; set; }
+}
+
+var configuration = new MapperConfiguration(cfg => cfg.CreateMap<Source, Destination>());
+
+var sources = new[]
+	{
+		new Source { Value = 5 },
+		new Source { Value = 6 },
+		new Source { Value = 7 }
+	};
+
+IEnumerable<Destination> ienumerableDest = mapper.Map<Source[], IEnumerable<Destination>>(sources);
+ICollection<Destination> icollectionDest = mapper.Map<Source[], ICollection<Destination>>(sources);
+IList<Destination> ilistDest = mapper.Map<Source[], IList<Destination>>(sources);
+List<Destination> listDest = mapper.Map<Source[], List<Destination>>(sources);
+Destination[] arrayDest = mapper.Map<Source[], Destination[]>(sources);
+```
