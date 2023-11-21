@@ -130,4 +130,4 @@ var configuration = new MapperConfiguration(cfg => cfg.DisableConstructorMapping
 
 var configuration = new MapperConfiguration(cfg => cfg.ShouldUseConstructor = constructor => constructor.IsPublic);//配置目标对象考虑哪些构造函数，这里是只考虑公共构造函数
 ```
-### 8.
+### 8.扁平化
