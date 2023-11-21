@@ -13,24 +13,24 @@
 ```C#
 public class OuterSource
 {
-	public int Value { get; set; }
-	public InnerSource Inner { get; set; }//复杂类型
+    public int Value { get; set; }
+    public InnerSource Inner { get; set; }//复杂类型
 }
 
 public class InnerSource
 {
-	public int OtherValue { get; set; }
+    public int OtherValue { get; set; }
 }
 
 public class OuterDest
 {
-	public int Value { get; set; }
-	public InnerDest Inner { get; set; }//复杂类型
+    public int Value { get; set; }
+    public InnerDest Inner { get; set; }//复杂类型
 }
 
 public class InnerDest
 {
-	public int OtherValue { get; set; }
+    public int OtherValue { get; set; }
 }
 
 var config = new MapperConfiguration(cfg => {
@@ -42,22 +42,22 @@ var config = new MapperConfiguration(cfg => {
 ```C#
 public class Source
 {
-	public int Value { get; set; }
+    public int Value { get; set; }
 }
 
 public class Destination
 {
-	public int Value { get; set; }
+    public int Value { get; set; }
 }
 
 var configuration = new MapperConfiguration(cfg => cfg.CreateMap<Source, Destination>());
 
 var sources = new[]
-	{
-		new Source { Value = 5 },
-		new Source { Value = 6 },
-		new Source { Value = 7 }
-	};
+    {
+	new Source { Value = 5 },
+	new Source { Value = 6 },
+	new Source { Value = 7 }
+    };
 
 IEnumerable<Destination> ienumerableDest = mapper.Map<Source[], IEnumerable<Destination>>(sources);
 ICollection<Destination> icollectionDest = mapper.Map<Source[], ICollection<Destination>>(sources);
@@ -81,22 +81,22 @@ public class FoodMapping : Profile
 ```C#
 public class ParentSource
 {
-	public int Value1 { get; set; }
+    public int Value1 { get; set; }
 }
 
 public class ChildSource : ParentSource
 {
-	public int Value2 { get; set; }
+    public int Value2 { get; set; }
 }
 
 public class ParentDestination
 {
-	public int Value1 { get; set; }
+    public int Value1 { get; set; }
 }
 
 public class ChildDestination : ParentDestination
 {
-	public int Value2 { get; set; }
+    public int Value2 { get; set; }
 }
 
 var configuration = new MapperConfiguration(c=> {
