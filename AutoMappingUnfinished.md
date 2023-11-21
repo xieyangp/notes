@@ -105,3 +105,29 @@ var configuration = new MapperConfiguration(c=> {
     c.CreateMap<ChildSource, ChildDestination>();
 });
 ```
+### 7.源成员映射到目标构造函数：
+```C#
+public class Source {
+    public int Value { get; set; }
+}
+public class SourceDto {
+    public SourceDto(int value) {
+        _value = value;
+    }
+    private int _value;
+    public int Value {
+        get { return _value; }
+    }
+}
+var configuration = new MapperConfiguration(cfg => cfg.CreateMap<Source, SourceDto>());
+
+var configuration = new MapperConfiguration(cfg =>
+  cfg.CreateMap<Source, SourceDto>()
+    .ForCtorParam("valueParamSomeOtherName", opt => opt.MapFrom(src => src.Value))//目标构造函数参数名称不匹配时，通过ForCtorParam修改
+);
+
+var configuration = new MapperConfiguration(cfg => cfg.DisableConstructorMapping());//禁用构造函数映射
+
+var configuration = new MapperConfiguration(cfg => cfg.ShouldUseConstructor = constructor => constructor.IsPublic);//配置目标对象考虑哪些构造函数，这里是只考虑公共构造函数
+```
+### 8.
