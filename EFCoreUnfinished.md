@@ -110,11 +110,7 @@ public class Foods : IEntity
             });
     }
 ```
-###   4、更具项目是数据驱动开发还是模型驱动开发，选择读取数据库或数据迁移
-
-
-
-## 二、DbContext的
+###   4、根据项目是数据驱动开发还是模型驱动开发，选择读取数据库或数据迁移
 
 
 ## Repository仓储模式的优缺点：
@@ -134,63 +130,7 @@ public class Foods : IEntity
   如上图 有一个Action需要调用很多Service 然后 Service之间又相互调用，在开启Action时 其实是想开启一个事务，但是某些内部代码有可能自己去开启了事务。相互之间调用管理起来非常麻烦。经常出现不可估计的问题。如果有一个集中管理的地方就好很多。比如在Action这里启动一个工作单元，后续所有的业务都使用同一个事务 和 DbContext，这才是我们的预期的。  
   3、如何使用工作单元
   
-## UnifyResponseSpacification 中间件规范类
-```C#
-//这段代码是一个实现了IPipeSpecification接口的泛型类UnifyResponseSpecification<TContext>。该类用于统一处理响应，包括在执行前、执行中、执行后以及出现异常时的处理。
-public class UnifyResponseSpecification<TContext> : IPipeSpecification<TContext>
-        where TContext : IContext<IMessage>
-    {
-        //确定是否应该执行响应处理。在这个实现中，始终返回true，即始终执行响应处理。
-        public bool ShouldExecute(TContext context, CancellationToken cancellationToken)
-        {
-            return true;
-        }
-        //在执行之前调用
-        public Task BeforeExecute(TContext context, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-        //执行响应处理
-        public Task Execute(TContext context, CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-        //执行后调用,调用EnrichResponse方法来丰富响应信息，然后返回一个已完成的Task。
-        public Task AfterExecute(TContext context, CancellationToken cancellationToken)
-        {
-            EnrichResponse(context, null);
 
-            return Task.CompletedTask;
-        }
-        //出现异常时调用,同样调用EnrichResponse方法来丰富响应信息
-        public Task OnException(Exception ex, TContext context)
-        {
-            EnrichResponse(context, ex);
-
-            ExceptionDispatchInfo.Capture(ex).Throw();
-
-            throw ex;
-        }
-        //EnrichResponse方法用于丰富响应信息，根据是否出现异常来设置响应的状态码和消息。如果未出现异常，则将状态码设置为OK，消息设置为OK；如果出现异常，则将状态码设置为InternalServerError，消息设置为异常的消息。
-        private void EnrichResponse(TContext context, Exception ex)
-        {
-            if (!ShouldExecute(context, default) || context.Result is not CommonResponse) return;
-
-            var response = (dynamic)context.Result;
-
-            if (ex == null)
-            {
-                response.Code = HttpStatusCode.OK;
-                response.Msg = nameof(HttpStatusCode.OK).ToLower();
-            }
-            else
-            {
-                response.Code = HttpStatusCode.InternalServerError;
-                response.Msg = ex.Message;
-            }
-        }
-
-```
 ## DatabaseFacade
 ```
     DatabaseFacade是Entity Framework Core中的一类，它提供了对数据库连接和交互的访问。它允许开发人员在应用程序中执行各种数据库操作，如执行原始SQL查询、执行存储过程、管理等事务。DatabaseFacade还提供了对数据库连接状态的管理和监控，以及对数据库架构和元数据的访问。
