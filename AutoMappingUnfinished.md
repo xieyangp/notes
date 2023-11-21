@@ -189,4 +189,60 @@ public class OrderDto
      public decimal Total { get; set; }
 }
 ```
-9.反向映射，ReverseMap
+### 9.ReverseMap配置反向映射，自定义反方向映射：ForPath
+```
+例如：CreateMap<Order,OrderDto>().ReverseMap();既可以order映射到OrderDto也可以OrderDto映射到Order
+```
+### 10.映射继承：Include与IncludeBase
+```
+Include方法用于包含其他映射配置。当一个类包含另一个类作为其属性时，我们可以使用Include方法将这两个类的映射配置组合在一起，从而在进行映射时可以一起进行处理。
+
+IncludeBase方法用于包含父类的映射配置。当一个类继承自另一个类时，我们可以使用IncludeBase方法将父类的映射配置包含进来，这样子类就可以继承父类的映射配置，使得映射配置更加简洁和易于维护。
+```
+#### 运行时多态映射
+```C#
+public class Order { }
+public class OnlineOrder : Order { }
+public class MailOrder : Order { }
+
+public class OrderDto { }
+public class OnlineOrderDto : OrderDto { }
+public class MailOrderDto : OrderDto { }
+
+var configuration = new MapperConfiguration(cfg => {
+    cfg.CreateMap<Order, OrderDto>()
+        .Include<OnlineOrder, OnlineOrderDto>()
+        .Include<MailOrder, MailOrderDto>();
+    cfg.CreateMap<OnlineOrder, OnlineOrderDto>();
+    cfg.CreateMap<MailOrder, MailOrderDto>();
+});
+
+var order = new OnlineOrder();
+
+var mapped = mapper.Map(order, order.GetType(), typeof(OrderDto));
+
+Assert.IsType<OnlineOrderDto>(mapped);//这里断言通过，说明automapper自动选择更合适的映射对象
+```
+### 11.条件映射：在映射之前添加条件
+```C#
+cfg.CreateMap<Foo,Bar>()
+   .ForMember(dest => dest.baz, opt => opt.Condition(src => (src.baz >= 0)));
+```
+### 12.源中有值为null，如果想要替换，使用NullSubstitute()
+```C#
+cfg.CreateMap<Source, Dest>()
+   .ForMember(destination => destination.Value, opt => opt.NullSubstitute("Other Value")));
+```
+### 13.价值转换器：如果在映射过程中需要数据格式化、数据验证、数据清洗、数据计算，可以使用价值转换器：
+```
+类型转换器=Func<TSource, TDestination, TDestination>
+值解析器 =Func<TSource, TDestination, TDestinationMember>
+成员值解析器 =Func<TSource, TDestination, TSourceMember, TDestinationMember>
+值转换器 =Func<TSourceMember, TDestinationMember>
+```
+### 14.如果需要在映射之前或之后自定义一些逻辑，可以使用BeforeMap和AfterMap
+```C#
+cfg.CreateMap<Source, Dest>()
+    .BeforeMap((src, dest) => src.Value = src.Value + 10)
+    .AfterMap((src, dest) => dest.Name = "John");
+```
