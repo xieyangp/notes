@@ -246,3 +246,5 @@ cfg.CreateMap<Source, Dest>()
     .BeforeMap((src, dest) => src.Value = src.Value + 10)
     .AfterMap((src, dest) => dest.Name = "John");
 ```
+## 三.学习网站
+[AutoMapper官网](https://docs.automapper.org/en/latest/Getting-started.html)
