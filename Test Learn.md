@@ -1,14 +1,14 @@
-一、测试
+## 一、测试
     测试的目的保证软件的质量和功能。测试的分类有很多种，下面主要是按开发阶段的测试方法；  
-二、知识点  
+## 二、知识点  
     1.单元测试：对软件中最小可测试单元进行检查和验证。一般情况下最小可测试单元如一个类，一个函数，一个方法等。   
     2.集成测试：对整个模块功能的正确性、单元模块之间接口的正确性、单个模块的缺陷对整个模块功能的影响、模块之间功能的冲突、全局数据结构的测试，   
     3.系统测试：对系统的功能、界面、兼容性、安全性、性能、可靠性、易用性、容错性；   
     4.E2E测试：将应用程序与其依赖的系统一起进行测试，确保在使用网络后，前后端程序(包括上下游系统)能顺畅交互，从而保证业务上实现闭环，确保满足客户的使用需求，可以帮助发现与系统相关的问题。     
     系统测试与E2E测试的区别：     
     ![系统测试与E2E测试的区别](https://github.com/xieyangp/notes/blob/main/image/Test/Test.png)    
-三、使用流程
-1.在单元测试中，通过使用AAA模式进行单元测试编写：
+## 三、使用流程
+### 1.在单元测试中，通过使用AAA模式进行单元测试编写：
 ```
 AAA模式即Arrange，Act，Assert：
 
@@ -18,8 +18,8 @@ Act（操作）：在这个部分，我们执行要测试的操作或调用要�
 
 Assert（断言）：在这个部分，我们验证操作的结果是否符合预期。我们使用断言方法来检查实际输出与期望输出之间的匹配性。
 ```
-2.测试配置   
-a.建立一个测试基础类，即TestBase：
+### 2.测试配置   
+#### a.建立一个测试基础类，即TestBase：
 ```C#
 //partial关键字：可在命名空间中定义该类、结构或接口的其他部分。 所有部分都必须使用 partial 关键字。在编译时，各个部分都必须可用来形成最终的类型。
 public partial class TestBase : TestUtilbase, IAsyncLifetime, IDisposable
@@ -58,7 +58,7 @@ public partial class TestBase : TestUtilbase, IAsyncLifetime, IDisposable
     }
 }
 ```
-b.再创建一个TestBase.Initial.cs类，是TestBase的部分
+#### b.再创建一个TestBase.Initial.cs类，是TestBase的部分
 ```C#
 public partial class TestBase
 {
@@ -149,7 +149,7 @@ public partial class TestBase
         }
     }
 ```
-c.创建一个TestUtilbase类：
+#### c.创建一个TestUtilbase类：
 ```C#
 public class TestUtilbase
 {
@@ -309,7 +309,7 @@ public class TestUtilbase
     }
 }
 ```
-d.创建一个TestUtil类，继承TestUtilbase
+#### d.创建一个TestUtil类，继承TestUtilbase
 ```C#
 public class TestUtil : TestUtilbase
 {
@@ -330,8 +330,8 @@ public class TestUtil : TestUtilbase
     }
 }
 ```
-3.开始编写测试单元：
-  a.创建一个以Fixture结尾的测试基础类,继承FoodFixtureBase
+### 3.开始编写测试单元：
+#### a.创建一个以Fixture结尾的测试基础类,继承FoodFixtureBase
 ```c#
 [Collection("Food Tests")]
 public class FoodFixtureBase : TestBase
@@ -341,7 +341,7 @@ public class FoodFixtureBase : TestBase
     }
 }
 ```
-b.创建一个测试类,继承Fixture基础类：
+#### b.创建一个测试类,继承Fixture基础类：
 ```C#
 public partial class FoodFixture : FoodFixtureBase
 {
@@ -434,22 +434,4 @@ public partial class FoodFixture : FoodFixtureBase
     }
 }
 ```
-四、学习网址  
-
-## NSubstitute
-###  Substitute.For<Interface>():创建替代品；最好用接口创建，用类创建容易出现一些问题，例如类中任何非虚拟代码都将被执行。
-    替代多个接口：Substitute.For<ICommand, IDisposable>()；可以替代多个接口，但是只能实现一个。
-    替代委托类型：Substiute.For<T>()。当替换委托类型时，您将无法让替换项实现其他接口或类
-### Resturns：设置返回值
-    方法设置：calculator.Add(1, 2).Returns(3);每次使用calculator.Add(1, 2)都有一个返回值为3
-    属性设置：calculator.Mode.Returns("DEC");每次使用calculator.Mode都为"DEC"
-### 参数匹配器：设置返回值 和 检查收到的调用 时可以使用参数匹配器   
-    Arg.Any<T>():1.忽略参数，Arg.Any<int>()表示任何数字
-    Arg.Is<T>();
-   
-    注意：arg 匹配器实际上是模糊匹配的；不直接传递给函数调用
-    ReturnsForAnyArgs()
-## 来电信息：
-    Returns()和 的函数ReturnsForAnyArgs()的类型为Func<CallInfo,T>，其中T是调用返回的类型，并且CallInfo是提供对调用所用参数的访问的类型  
-    T Arg<T>()T：获取传递给此调用的参数类型。  
-    T ArgAt<T>(int position)：获取在指定的从零开始的位置传递给此调用的参数，并将其转换为类型T。
+## 四、学习网址  
