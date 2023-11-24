@@ -31,7 +31,10 @@ public class Tests
    }
 }
 ```
-## Shouldly：一个断言库。
+## Shouldly：一个强大的断言库。断言的好处：判断代码的结果是否与预期相同，快速定位错误的地方；
+通常我们在操作(Assert)之后对进行断言，有时候也会在准备(Arrang)之后进行一次断言来判断准备是否准确;
+Shouldly提供了许多的方法，一般每种判断类型有两种，例如ShouldBy，ShouldNotBe,所以在记忆的时候记住'可以'即可；
+Shouldly报错提示也更详细，相较之前有了报错对象的显示；
 
 ## NSubstitute
 ###  Substitute.For<Interface>():创建替代品；最好用接口创建，用类创建容易出现一些问题，例如类中任何非虚拟代码都将被执行。
@@ -47,7 +50,7 @@ public class Tests
     注意：arg 匹配器实际上是模糊匹配的；不直接传递给函数调用
     ReturnsForAnyArgs()
 ## 来电信息：
-    Returns()和 的函数ReturnsForAnyArgs()的类型为Func<CallInfo,T>，其中T是调用返回的类型，并且CallInfo是提供对调用所用参数的访问的类型  
+    Returns()和 的函数ReturnsForAnyArgs()的类型为Func<CallInfo,T>，其中T是调用返回的类型，并且CallInfo是提供对调用所用参数的访问的  类型  
     T Arg<T>()T：获取传递给此调用的参数类型。  
     T ArgAt<T>(int position)：获取在指定的从零开始的位置传递给此调用的参数，并将其转换为类型T。
 
