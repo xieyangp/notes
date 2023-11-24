@@ -35,7 +35,7 @@ public class Tests
 ## Shouldly：一个强大的断言库。断言的好处：判断代码的结果是否与预期相同，快速定位错误的地方；
 [Shouldly官网](https://xunit.net/docs/getting-started/netfx/jetbrains-rider)   
 通常我们在操作(Assert)之后对进行断言，有时候也会在准备(Arrang)之后进行一次断言来判断准备是否准确;
-```
+```C#
 await RunWithUnitOfWork<IRepository>(async repository =>
    await repository.InsertAsync<Foods>(new Foods { Id = 11, Name = "cake", Color = "red" }).ConfigureAwait(false));
 
