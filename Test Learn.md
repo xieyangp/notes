@@ -342,7 +342,7 @@ public class TestUtil : TestUtilbase
     }
 }
 ```
-### 3.开始编写测试单元：
+### 3.开始编写集成测试：
 #### a.创建一个以Fixture结尾的测试基础类,继承FoodFixtureBase
 ```c#
 [Collection("Food Tests")]
@@ -384,7 +384,7 @@ public partial class FoodFixture : FoodFixtureBase
         });
     }
 
-[Fact]
+    [Fact]
     public async Task CanUpdateFood()
     {
         await RunWithUnitOfWork<IRepository>(async repository =>
