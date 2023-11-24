@@ -58,9 +58,9 @@ afterUpdateFood.Name.ShouldBe("mike");
 afterUpdateFood.Color.ShouldBe("white");
 ```
 Shouldly提供了许多的方法，一般每种判断类型有两种，例如ShouldBy，ShouldNotBe,所以在记忆的时候记住'可以'即可；  
-## NSubstitute：一个替代库
-[NSubstituteg官网](https://nsubstitute.github.io/help/return-for-args/)
-###下面是常用的方法
+## NSubstitute：一个替代库  
+[NSubstituteg官网](https://nsubstitute.github.io/help/return-for-args/)   
+### 下面是常用的方法
 ###  Substitute.For<Interface>():创建替代品；最好用接口创建，用类创建容易出现一些问题，例如类中任何非虚拟代码都将被执行。
     替代多个接口：Substitute.For<ICommand, IDisposable>()；可以替代多个接口，但是只能实现一个。
     替代委托类型：Substiute.For<T>()。当替换委托类型时，您将无法让替换项实现其他接口或类
