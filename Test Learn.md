@@ -5,8 +5,8 @@
     2.集成测试：对整个模块功能的正确性、单元模块之间接口的正确性、单个模块的缺陷对整个模块功能的影响、模块之间功能的冲突、全局数据结构的测试，   
     3.系统测试：对系统的功能、界面、兼容性、安全性、性能、可靠性、易用性、容错性；   
     4.E2E测试：将应用程序与其依赖的系统一起进行测试，确保在使用网络后，前后端程序(包括上下游系统)能顺畅交互，从而保证业务上实现闭环，确保满足客户的使用需求，可以帮助发现与系统相关的问题。     
-    系统测试与E2E测试的区别：     
-    ![系统测试与E2E测试的区别](https://github.com/xieyangp/notes/blob/main/image/Test/Test.png)    
+### 系统测试与E2E测试的区别：     
+![系统测试与E2E测试的区别](https://github.com/xieyangp/notes/blob/main/image/Test/Test.png)    
 ## 三、使用流程
 ### 1.在单元测试中，通过使用AAA模式进行单元测试编写：
 ```
@@ -19,30 +19,30 @@ Act（操作）：在这个部分，我们执行要测试的操作或调用要�
 Assert（断言）：在这个部分，我们验证操作的结果是否符合预期。我们使用断言方法来检查实际输出与期望输出之间的匹配性。
 ```
 ### 2.测试配置   
-#### a.建立一个测试基础类，即TestBase：
+#### a.建立一个测试基础类，用来设置生命周期和初始化测试环境，以及添加测试主题和数据库名，即TestBase：
 ```C#
 //partial关键字：可在命名空间中定义该类、结构或接口的其他部分。 所有部分都必须使用 partial 关键字。在编译时，各个部分都必须可用来形成最终的类型。
 public partial class TestBase : TestUtilbase, IAsyncLifetime, IDisposable
 {
-    private readonly string _testTopic;
-    private readonly string _databaseName;
+    private readonly string _testTopic;//测试主题
+    private readonly string _databaseName;//数据库名
 
-    private static readonly ConcurrentDictionary<string, IContainer> Containers = new();
+    private static readonly ConcurrentDictionary<string, IContainer> Containers = new();//储存容器
 
-    private static readonly ConcurrentDictionary<string, bool> shouldRunDbUpDatabases = new();
+    private static readonly ConcurrentDictionary<string, bool> shouldRunDbUpDatabases = new();//是否需要运行Dbup类
 
-    protected ILifetimeScope CurrentScope { get; }
+    protected ILifetimeScope CurrentScope { get; }//生命周期范围
 
-    protected IConfiguration CurrentConfiguration => CurrentScope.Resolve<IConfiguration>();
+    protected IConfiguration CurrentConfiguration => CurrentScope.Resolve<IConfiguration>();//当前配置
     
     protected TestBase(string testTopic, string databaseName) 
     {
         _testTopic = testTopic;
         _databaseName = databaseName;
+        
+        var root = Containers.GetValueOrDefault(testTopic);//获取测试容器
 
-        var root = Containers.GetValueOrDefault(testTopic);
-
-        if (root == null)
+        if (root == null)//当前容器不存在就新建一个容器
         {
             var containerBuilder = new ContainerBuilder();
             var configuration = Registerconfiguration(containerBuilder);
@@ -51,31 +51,37 @@ public partial class TestBase : TestUtilbase, IAsyncLifetime, IDisposable
             Containers[testTopic] = root;
         }
 
-        CurrentScope = root.BeginLifetimeScope();
+        CurrentScope = root.BeginLifetimeScope();//创建一个新的生命周期范围
 
-        RunDbUpIfRequired();
-        SetupScope(CurrentScope);
+        RunDbUpIfRequired();//如果需要运行DbUp数据库则运行它
+        SetupScope(CurrentScope);//设置生命周期
     }
 }
 ```
-#### b.再创建一个TestBase.Initial.cs类，是TestBase的部分
+#### b.再创建一个TestBase.Initial.cs类，主要用于运行数据库迁移、注册容器和配置，以及清理数据库记录，也是TestBase的部分
 ```C#
 public partial class TestBase
 {
+    //用来存储需要排除的表名
     private readonly List<string> _tableRecordsDeletionExcludeList = new()
     {
         "schemaversions"
     };
 
+    //运行DbUp数据库迁移
     private void RunDbUpIfRequired()
     {
+        //检查字典中是否存在指定数据库名称
         if (!shouldRunDbUpDatabases.GetValueOrDefault(_databaseName, true)) return;
 
+        //存在，执行数据库迁移
         new DbUpRunner(new ConnectionString(CurrentConfiguration).Value).Run();
 
+        //将字典中的数据库名设置为false，表示已经迁移过
         shouldRunDbUpDatabases[_databaseName] = false;
     }
 
+    //在容器注册Module和IMemoryCache。
     private void RegisterBaseContainer(ContainerBuilder containerBuilder, IConfiguration configuration)
     {
         containerBuilder.RegisterModule(
@@ -84,18 +90,19 @@ public partial class TestBase
         containerBuilder.RegisterInstance(Substitute.For<IMemoryCache>()).AsImplementedInterfaces();
     }
 
+    //注册配置
     private IConfigurationRoot Registerconfiguration(ContainerBuilder containerBuilder)
     {
         var targetJson = $"appsettings{_testTopic}.json";
-        File.Copy("appsettings.json", targetJson, true);
-        dynamic jsonObj = JsonConvert.DeserializeObject(File.ReadAllText(targetJson));
+        File.Copy("appsettings.json", targetJson, true);//将appsettings.json复制到targetJson
+        dynamic jsonObj = JsonConvert.DeserializeObject(File.ReadAllText(targetJson));//JsonConvert.DeserializeObject方法将targetJson文件的内容解析为动态对象jsonObj，
         jsonObj["ConnectionStrings"]["Default"] =
             jsonObj["ConnectionStrings"]["Default"].ToString()
-                .Replace("Database=smart_faq", $"Database={_databaseName}");
-        File.WriteAllText(targetJson, JsonConvert.SerializeObject(jsonObj));
-        var configuration = new ConfigurationBuilder().AddJsonFile(targetJson).Build();
-        containerBuilder.RegisterInstance(configuration).AsImplementedInterfaces();
-        return configuration;
+                .Replace("Database=smart_faq", $"Database={_databaseName}");//修改其中的连接字符串，将数据库名称替换为_databaseName。
+        File.WriteAllText(targetJson, JsonConvert.SerializeObject(jsonObj));//然后将修改后的jsonObj重新写入到targetJson文件中
+        var configuration = new ConfigurationBuilder().AddJsonFile(targetJson).Build();//使用ConfigurationBuilder将其添加为配置
+        containerBuilder.RegisterInstance(configuration).AsImplementedInterfaces();//将configuration实例注册为containerBuilder的实现接口
+        return configuration;//返回configuration对象
     }
 
     public async Task InitializeAsync()
@@ -107,6 +114,7 @@ public partial class TestBase
         return Task.CompletedTask;
     }
 
+    //清除数据库中的记录
     private void ClearDatabaseRecord()
     {
         try
@@ -120,9 +128,11 @@ public partial class TestBase
             using var reader = new MySqlCommand(
                     $"SELECT table_name FROM INFORMATION_SCHEMA.tables WHERE table_schema = '{_databaseName}';",
                     connection)
-                .ExecuteReader();
+                .ExecuteReader();//将_databaseName中的表名全部读取出来
 
-            deleteStatements.Add($"SET SQL_SAFE_UPDATES = 0");
+            deleteStatements.Add($"SET SQL_SAFE_UPDATES = 0");//创建一个空的deleteStatements列表，用于存储删除记录的SQL语句。并且添加了"SET SQL_SAFE_UPDATES = 0"语句，这是为了禁用安全更新模式。
+
+            //通过循环读取DataReader对象中的数据，获取每个表的名称，并检查是否在排除列表中。如果不在排除列表中，则向deleteStatements列表中添加"DELETE FROM {table}"语句，用于删除该表中的所有记录。
             while (reader.Read())
             {
                 var table = reader.GetString(0);
@@ -133,11 +143,11 @@ public partial class TestBase
                 }
             }
 
-            deleteStatements.Add($"SET SQL_SAFE_UPDATES = 1");
+            deleteStatements.Add($"SET SQL_SAFE_UPDATES = 1");//启用安全更新模式。
 
             reader.Close();
 
-            var strDeleteStatements = string.Join(";", deleteStatements) + ";";
+            var strDeleteStatements = string.Join(";", deleteStatements) + ";";//将deleteStatements列表中的SQL语句通过string.Join方法连接成一个完整的SQL语句，并在末尾添加分号。
 
             new MySqlCommand(strDeleteStatements, connection).ExecuteNonQuery();
 
@@ -149,7 +159,7 @@ public partial class TestBase
         }
     }
 ```
-#### c.创建一个TestUtilbase类：
+#### c.创建一个TestUtilbase类，这个类提供了一些方法来管理生命周期范围，并在生命周期范围内执行某些操作：
 ```C#
 public class TestUtilbase
 {
@@ -160,10 +170,11 @@ public class TestUtilbase
         _scope = scope;
     }
 
-    protected void SetupScope(ILifetimeScope scope) => _scope = scope; 
+    protected void SetupScope(ILifetimeScope scope) => _scope = scope; //子类通过这个方法将scope赋值给_scope
 
     protected void Run<T>(Action<T> action, Action<ContainerBuilder> extraRegistration = null)//无放回值
     {
+        //容器存在注册额外组件，再解析出T类型，不存在直接解析T类型
         var dependency = extraRegistration != null
             ? _scope.BeginLifetimeScope(extraRegistration).Resolve<T>()
             : _scope.BeginLifetimeScope().Resolve<T>();
@@ -309,7 +320,7 @@ public class TestUtilbase
     }
 }
 ```
-#### d.创建一个TestUtil类，继承TestUtilbase
+#### d.创建一个TestUtil类，创建生命周期，继承TestUtilbase
 ```C#
 public class TestUtil : TestUtilbase
 {
@@ -318,6 +329,7 @@ public class TestUtil : TestUtilbase
         SetupScope(scope);
     }
 
+    //从程序集获取resourceName的流，并读取返回字符串
     protected string ReadJsonFileFromResource(string resourceName)
     {
         using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName);
