@@ -353,7 +353,7 @@ public class FoodFixtureBase : TestBase
     }
 }
 ```
-#### b.创建一个测试类,继承Fixture基础类：
+#### b.创建一个测试类,继承Fixture基础类，这里面写测试方法测试方法：
 ```C#
 public partial class FoodFixture : FoodFixtureBase
 {
