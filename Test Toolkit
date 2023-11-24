@@ -1,3 +1,35 @@
+## xUnit.net：是一个用于编写和运行单元测试的开源测试框架。  
+xUnit.net 支持两种不同主要类型的单元测试：事实和理论。
+
+事实是永远正确的测试。他们测试不变条件。[Fact]
+
+理论是仅适用于一组特定数据的测试。[Theory]
+## 
+```C#
+public class Tests
+{
+   [Fact]
+   public void PassingTest()
+   {
+       Assert.Equal(4, Calculator.Add(2, 2));
+   }
+
+   [Fact]
+   public void FailingTest()
+   {
+       Assert.Equal(5, Calculator.Add(2, 2));
+   }
+
+   [Theory]
+   [InlineData(2, 2, 4)]
+   [InlineData(3, 3, 6)]
+   [InlineData(2, 2, 5)]
+   public void MyTheory(int x, int y, int sum)
+   {
+      Assert.Equal(sum, Calculator.Add(x, y));
+   }
+}
+```
 ## NSubstitute
 ###  Substitute.For<Interface>():创建替代品；最好用接口创建，用类创建容易出现一些问题，例如类中任何非虚拟代码都将被执行。
     替代多个接口：Substitute.For<ICommand, IDisposable>()；可以替代多个接口，但是只能实现一个。
