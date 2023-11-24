@@ -18,7 +18,7 @@ Act（操作）：在这个部分，我们执行要测试的操作或调用要�
 
 Assert（断言）：在这个部分，我们验证操作的结果是否符合预期。我们使用断言方法来检查实际输出与期望输出之间的匹配性。
 ```
-2.测试配置
+2.测试配置   
 a.建立一个测试基础类，即TestBase：
 ```C#
 //partial关键字：可在命名空间中定义该类、结构或接口的其他部分。 所有部分都必须使用 partial 关键字。在编译时，各个部分都必须可用来形成最终的类型。
@@ -327,6 +327,110 @@ public class TestUtil : TestUtilbase
         using var reader = new StreamReader(stream);
 
         return reader.ReadToEnd();
+    }
+}
+```
+3.开始编写测试单元：
+  a.创建一个以Fixture结尾的测试基础类,继承FoodFixtureBase
+```c#
+[Collection("Food Tests")]
+public class FoodFixtureBase : TestBase
+{
+    protected FoodFixtureBase() : base("_food_", "Test")//_food_：测试标题，Test：数据库名；
+    {
+    }
+}
+```
+b.创建一个测试类,继承Fixture基础类：
+```C#
+public partial class FoodFixture : FoodFixtureBase
+{
+    private readonly FoodsUtil _foodsUtil;
+
+    public FoodFixture()
+    {
+        _foodsUtil = new FoodsUtil(CurrentScope);
+    }
+
+    [Fact]
+    public async Task CanCreateFood()
+    {
+        var food = new CreateFoodDto { Name = "mike", Color = "white" };
+
+        await Run<IRepository>(async repository =>
+        {
+            var beforeCreateFood = await repository.CountAsync<Foods>(x => true).ConfigureAwait(false);
+
+            beforeCreateFood.ShouldBe(0);
+
+            await _foodsUtil.CreateFoodAsync(food);
+
+            var afterUpdateFood = await repository.FirstOrDefaultAsync<Foods>(i => i.Name.Equals("mike")).ConfigureAwait(false);
+            
+            afterUpdateFood?.Color.ShouldBe("white");
+            afterUpdateFood?.Name.ShouldBe("mike");
+        });
+    }
+
+[Fact]
+    public async Task CanUpdateFood()
+    {
+        await RunWithUnitOfWork<IRepository>(async repository =>
+            await repository.InsertAsync<Foods>(new Foods { Id = 11, Name = "cake", Color = "red" }).ConfigureAwait(false));
+
+        var food = new UpdateFoodDto { Id = 11, Name = "mike", Color = "white" };
+
+        var beforeUpdateFood = await Run<IRepository, Foods>(async repository =>
+            await repository.GetByIdAsync<Foods>(11).ConfigureAwait(false));
+
+        beforeUpdateFood.Id.ShouldBe(11);
+        beforeUpdateFood.Name.ShouldBe("cake");
+        beforeUpdateFood.Color.ShouldBe("red");
+
+        await _foodsUtil.UpdateFoodAsync(food);
+
+        var afterUpdateFood = await Run<IRepository, Foods>(async repository =>
+            await repository.GetByIdAsync<Foods>(food.Id).ConfigureAwait(false));
+
+        afterUpdateFood.Id.ShouldBe(11);
+        afterUpdateFood.Name.ShouldBe("mike");
+        afterUpdateFood.Color.ShouldBe("white");
+    }
+
+    [Fact]
+    public async Task CanDeleteFood()
+    {
+        await RunWithUnitOfWork<IRepository>(async repository =>
+            await repository.InsertAsync<Foods>(new Foods { Id = 11, Name = "cake", Color = "red" }).ConfigureAwait(false));
+        
+        var food = new DeleteFoodDto() { Id = 11 };
+
+        var beforeDeleteFood = await Run<IRepository, Foods>(async respository =>
+            await respository.GetByIdAsync<Foods>(food.Id));
+
+        beforeDeleteFood.Id.ShouldBe(11);
+
+        await _foodsUtil.DeleteFoodAsync(food);
+
+        var afterDeleteFood = await Run<IRepository, Foods>(async respository =>
+            await respository.GetByIdAsync<Foods>(food.Id));
+
+        afterDeleteFood.ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task CanGetFood()
+    {
+        await RunWithUnitOfWork<IRepository>(async repository =>
+            await repository.InsertAsync<Foods>(new Foods { Id = 11, Name = "cake", Color = "red" }).ConfigureAwait(false));
+
+        var food = new GetFoodDto { Id = 11 };
+
+        var getFood = await _foodsUtil.GetFoodAsync(food);
+
+        getFood.Result.Id.ShouldBe(11);
+        getFood.Result.Name.ShouldBe("cake");
+        getFood.Result.Color.ShouldBe("red");
     }
 }
 ```
