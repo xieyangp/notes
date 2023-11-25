@@ -18,6 +18,55 @@ Act（操作）：在这个部分，我们执行要测试的操作或调用要�
 
 Assert（断言）：在这个部分，我们验证操作的结果是否符合预期。我们使用断言方法来检查实际输出与期望输出之间的匹配性。
 ```
+一个单元测试的案例
+```C#
+// 定义一个接口
+public interface ICalculator
+{
+    int Add(int a, int b);
+}
+
+// 要测试的类
+public class MyCalculator
+{
+    private ICalculator _calculator;
+
+    public MyCalculator(ICalculator calculator)
+    {
+        _calculator = calculator;
+    }
+
+    public int AddTwoNumbers(int x, int y)
+    {
+        // 调用ICalculator接口的方法
+        return _calculator.Add(x, y);
+    }
+}
+
+// 单元测试
+[Test]
+public void TestAddTwoNumbers()
+{
+    // 创建一个模拟对象代替ICalculator接口的实现
+    var calculator = Substitute.For<ICalculator>();
+    
+    // 设置模拟对象的方法的行为
+    calculator.Add(1, 2).Returns(3);
+    
+    // 创建要测试的类的实例，并传入模拟对象
+    var myCalculator = new MyCalculator(calculator);
+    
+    // 调用要测试的方法
+    int result = myCalculator.AddTwoNumbers(1, 2);
+    
+    // 验证调用方法的行为和结果
+   result.ShouldBe(3);
+    
+    // 验证被调用的方法是否被调用了指定的次数
+    calculator.Received().Add(1, 2);
+}
+
+```
 ### 2.测试配置   
 #### a.建立一个测试基础类，用来设置生命周期和初始化测试环境，以及添加测试主题和数据库名，即TestBase：
 ```C#
