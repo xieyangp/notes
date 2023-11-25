@@ -44,7 +44,7 @@ public class MyCalculator
 }
 
 // 单元测试
-[Test]
+[Fact]
 public void TestAddTwoNumbers()
 {
     // 创建一个模拟对象代替ICalculator接口的实现
