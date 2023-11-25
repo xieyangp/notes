@@ -60,7 +60,7 @@ public void TestAddTwoNumbers()
     int result = myCalculator.AddTwoNumbers(1, 2);
     
     // 验证调用方法的行为和结果
-   result.ShouldBe(3);
+    result.ShouldBe(3);
     
     // 验证被调用的方法是否被调用了指定的次数
     calculator.Received().Add(1, 2);
@@ -107,7 +107,7 @@ public partial class TestBase : TestUtilbase, IAsyncLifetime, IDisposable
     }
 }
 ```
-#### b.再创建一个TestBase.Initial.cs类，主要用于运行数据库迁移、注册容器和配置，以及清理数据库记录，也是TestBase的部分
+#### b.再创建一个TestBase.Initial.cs类，主要用于运行数据库迁移、注册容器和配置，以及清理数据库记录；
 ```C#
 public partial class TestBase
 {
