@@ -28,7 +28,7 @@ public class Tests
    [InlineData(2, 2, 5)]
    public void MyTheory(int x, int y, int sum)
    {
-      Assert.Equal(sum, Calculator.Add(x, y));
+       Assert.Equal(sum, Calculator.Add(x, y));
    }
 }
 ```
@@ -47,7 +47,7 @@ A.ShouldBeNull()
 ```C#
 A.ShouldBeTrue()
 
-B.ShouldBeTrue()
+B.ShouldBeFalse()
 ```
 ### ShouldBeOfType：应该属于某类型，如下A应该为B类型
 ```C#
