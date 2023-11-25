@@ -65,7 +65,6 @@ public void TestAddTwoNumbers()
     // 验证被调用的方法是否被调用了指定的次数
     calculator.Received().Add(1, 2);
 }
-
 ```
 ### 2.测试配置   
 #### a.建立一个测试基础类，用来设置生命周期和初始化测试环境，以及添加测试主题和数据库名，即TestBase：
