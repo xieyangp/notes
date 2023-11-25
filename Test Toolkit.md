@@ -97,4 +97,52 @@ afterUpdateFood.Color.ShouldBe("white");
     Returns()和 的函数ReturnsForAnyArgs()的类型为Func<CallInfo,T>，其中T是调用返回的类型，并且CallInfo是提供对调用所用参数的访问的  类型  
     T Arg<T>()T：获取传递给此调用的参数类型。  
     T ArgAt<T>(int position)：获取在指定的从零开始的位置传递给此调用的参数，并将其转换为类型T。
+## 一个例子，mock思路大致是这样，但是一般不会这么测试
+```C#
+ [Fact]
+ public async Task CanUpdateService()
+ {
+     //创建需要的参数
+     var food = new UpdateFoodDto
+     {
+         Id = 1,
+         Name = "cake",
+         Color = "red"
+     };
+     
+     var command = new UpdateFoodCommand
+     {
+         Food = food
+     };
 
+     var foods =new Foods
+     {   Id = 1,
+         Name = "cake",
+         Color = "red"
+     };
+     
+     var cancellationToken = new CancellationToken();
+     
+     //创建方法内引用的其他方法，并设置其返回值
+     var mapper = Substitute.For<IMapper>();
+     mapper.Map<UpdateFoodDto>(foods).Returns(food);
+     
+     var foodDataProvider = Substitute.For<IFoodDataProvider>();
+     foodDataProvider.UpdateFoodAsync(food, cancellationToken).Returns(Task.FromResult(foods));
+   
+     //创建要测试的方法所在的类，并将其中需要的引用注册进去
+     var foodService = new FoodService(mapper,foodDataProvider);
+    
+     //测试方法
+     var result = await foodService.UpdateFoodAsync(command, cancellationToken);
+
+     //检验是否正确
+     result.ShouldBeOfType<FoodUpdatedEvent>();
+     result.Result.ShouldBeOfType<UpdateFoodDto>();
+     result.Result.Id = 1;
+     result.Result.Name = "cake";
+     result.Result.Color = "red";
+    
+     var a = await foodDataProvider.Received().UpdateFoodAsync(food, cancellationToken);
+ }
+```
