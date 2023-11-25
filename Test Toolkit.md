@@ -34,7 +34,28 @@ public class Tests
 ```
 ## Shouldly：一个强大的断言库。断言的好处：判断代码的结果是否与预期相同，快速定位错误的地方；
 [Shouldly官网](https://xunit.net/docs/getting-started/netfx/jetbrains-rider)   
-通常我们在操作(Assert)之后对进行断言，有时候也会在准备(Arrang)之后进行一次断言来判断准备是否准确;
+## 下面是常用的一些方法
+### ShouldBe：应该是,如下A应该是B，如果不是则报错
+```C#
+A.ShouldBe(B)
+```
+### ShouldBeNull：应该为空，如下A应该为空
+```C#
+A.ShouldBeNull()
+```
+### ShouldBeTrue、ShouldBeFalse：应该为真，应该为假，如下A应该为真，B应该为假
+```C#
+A.ShouldBeTrue()
+
+B.ShouldBeTrue()
+```
+### ShouldBeOfType：应该属于某类型，如下A应该为B类型
+```C#
+A.ShouldBeOfType(B)
+```
+### Shouldly提供了许多的方法，一般每种判断类型有两种，例如ShouldBy，ShouldNotBe,所以在记忆的时候记住'可以'即可；  
+
+### 通常我们在操作(Assert)之后对进行断言，有时候也会在准备(Arrang)之后进行一次断言来判断准备是否准确;
 ```C#
 await RunWithUnitOfWork<IRepository>(async repository =>
    await repository.InsertAsync<Foods>(new Foods { Id = 11, Name = "cake", Color = "red" }).ConfigureAwait(false));
@@ -56,11 +77,10 @@ var afterUpdateFood = await Run<IRepository, Foods>(async repository =>
 afterUpdateFood.Id.ShouldBe(11);//判断测试数据是否被更新
 afterUpdateFood.Name.ShouldBe("mike");
 afterUpdateFood.Color.ShouldBe("white");
-```
-Shouldly提供了许多的方法，一般每种判断类型有两种，例如ShouldBy，ShouldNotBe,所以在记忆的时候记住'可以'即可；  
+```  
 ## NSubstitute：一个替代库  
 [NSubstituteg官网](https://nsubstitute.github.io/help/return-for-args/)   
-### 下面是常用的方法
+### 下面是常用的一些方法
 ###  Substitute.For<Interface>():创建替代品；最好用接口创建，用类创建容易出现一些问题，例如类中任何非虚拟代码都将被执行。
     替代多个接口：Substitute.For<ICommand, IDisposable>()；可以替代多个接口，但是只能实现一个。
     替代委托类型：Substiute.For<T>()。当替换委托类型时，您将无法让替换项实现其他接口或类
