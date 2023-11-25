@@ -123,7 +123,7 @@ afterUpdateFood.Color.ShouldBe("white");
      
      var cancellationToken = new CancellationToken();
      
-     //创建方法内引用的其他方法，并设置其返回值
+     //创建方法内引用的其他方法，并设置其返回值，mock IMapper、IFoodDataProvider
      var mapper = Substitute.For<IMapper>();
      mapper.Map<UpdateFoodDto>(foods).Returns(food);
      
