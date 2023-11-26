@@ -27,3 +27,6 @@ git config --global https.proxy https://代理IP地址:端口号
 查看git代理是否成功  
 git config http.proxy  
 git config https.proxy
+删除git代理
+git config --global --unset http.proxy
+git config --global --unset https.proxy
