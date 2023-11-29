@@ -89,7 +89,15 @@ public class Scripts0002_initial_tables : IScript
     }
 }
 ```
-### 4、在program的main中创建一个dbup类，将我们之前从配置文件中读取的数据库字符串通过构造方法赋值，再执行run方法：
+### 4、要记得，在.csproj中，将位于项目目录下的 .sql 文件添加到项目中
+```C#
+<ItemGroup>
+        <Content Include="DbUp\*\*.sql">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+```
+### 5、在program的main中创建一个dbup类，将我们之前从配置文件中读取的数据库字符串通过构造方法赋值，再执行run方法：
 ```C#
 public static void Main(string[] args)
 {
