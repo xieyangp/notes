@@ -92,14 +92,17 @@ public class Scripts0002_initial_tables : IScript
 ```
 ### 4、要记得，在.csproj中，将位于项目目录下的 .sql 文件添加到项目中
 ```C#
-//使用文件系统脚本提供者时，将.sql文件复制到文件目录
+//使用文件系统脚本提供者时，将.sql文件复制到输入目录，避免扫描不到文件
 <ItemGroup>
-    <Content Include="DbUp\*\*.sql">
+    <Content Include="DbUp\**\*.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 </ItemGroup>
 
-//
+//使用嵌入式脚本提供者时，将.sql文件夹嵌入程序集中，避免扫描不到文件。
+<ItemGroup>
+    <EmbeddedResource Include="DbUp\**\*.sql"/>
+</ItemGroup>
 ```
 ### 5、在program的main中创建一个dbup类，将我们之前从配置文件中读取的数据库字符串通过构造方法赋值，再执行run方法：
 ```C#
