@@ -12,7 +12,8 @@ WithScript, WithScripts
 ```
 ### 嵌入式脚本提供者：
 ```
-WithScriptsEmbeddedInAssembly, WithScriptsEmbeddedInAssemblies
+WithScriptsEmbeddedInAssembly, WithScriptsEmbeddedInAssemblies;
+WithScriptsAndCodeEmbeddedInAssembly:使用代码脚本时使用这个方法配置迁移脚本，这个方法不用在.csproj将代码脚本嵌入程序集中。
 ```
 #### 工作方式：
 ```
@@ -91,11 +92,14 @@ public class Scripts0002_initial_tables : IScript
 ```
 ### 4、要记得，在.csproj中，将位于项目目录下的 .sql 文件添加到项目中
 ```C#
+//使用文件系统脚本提供者时，将.sql文件复制到文件目录
 <ItemGroup>
     <Content Include="DbUp\*\*.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
 </ItemGroup>
+
+//
 ```
 ### 5、在program的main中创建一个dbup类，将我们之前从配置文件中读取的数据库字符串通过构造方法赋值，再执行run方法：
 ```C#
