@@ -35,12 +35,12 @@ public class UserQuestion : IEntity
 ### 3.读取自定义特性值
 ```C#
  public string? FindSortPropertyNameBySortField(string sortField)//sortField 排序字段
-    {
-        return typeof(UserQuestion).GetProperties()//GetProperties():获取类的所有属性
-            .Where(property => (property.GetCustomAttribute<SortColumnAttribute>()?.SortInt.Where(i => i.Equals(sortField))).Any())//.GetCustomAttribute<SortColumnAttribute>()：获取SortColumnAttribute特性的值
-            .Select(property => property)
-            .ToList().FirstOrDefault()?.Name;
-    }
+ {
+     return typeof(UserQuestion).GetProperties()//GetProperties():获取类的所有属性
+         .Where(property => (property.GetCustomAttribute<SortColumnAttribute>()?.SortInt.Where(i => i.Equals(sortField))).Any())//.GetCustomAttribute<SortColumnAttribute>()：获取SortColumnAttribute特性的值
+         .Select(property => property)
+         .ToList().FirstOrDefault()?.Name;
+ }
 ```
 ## 在使用特性的构造函数参数有一些限制，以下是一些常见的限制：
 ### 1.基本数据类型：构造函数参数的类型必须是基本数据类型，比如整数、浮点数、字符串、布尔等。
@@ -51,6 +51,7 @@ public class UserQuestion : IEntity
 ### 6.其他特性类型：构造函数参数可以是其他特性类型。
 ### 7.不能是动态类型 (dynamic)：特性的构造函数参数不能是动态类型，因为特性的信息在编译时就需要被解析
 ### 8.不能是泛型类型参数(T)和参数为泛型类型(List<T>等)：特性的构造函数参数不能是泛型类型参数。
+- - -
 # 常用属性路由特性
 ## 1.[Route]特性：用于在控制器或动作方法上指定路由模板。
 ## 2.[HttpGet], [HttpPost], [HttpPut], [HttpDelete], 等： 用于指定动作方法可以处理的 HTTP 请求类型。
