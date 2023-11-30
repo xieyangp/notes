@@ -90,3 +90,17 @@ d、[FromHeader] 特性：作用：从 HTTP 头部中获取参数值。
 - - -
 # partial 关键字
 ## 用于声明一个分部类（Partial Class）。分部类允许将一个类的定义分散到多个文件中，而这些文件会在编译时合并为一个单独的类。
+```C#
+// File1.cs
+public partial class MyClass
+{
+    public void Method1(){}
+}
+
+// File2.cs
+public partial class MyClass
+{
+    public void Method2(){}
+}
+
+```
