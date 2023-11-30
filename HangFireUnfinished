@@ -21,3 +21,54 @@ BackgroundJob .Schedule(
     () => Console .WriteLine( "延迟！" ),
      TimeSpan .FromDays(7));
 ```
+## 配置Hangfire
+### 1.引用包
+```
+Hangfire.Core
+
+Hangfire.MySqlStorage
+
+Hangfire.AspNetCore
+```
+### 2.创建一个类，写Hangfire的配置信息:
+```C#
+public static class HangFireExtension
+{
+    public static void AddHangFireService(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHangfire(config => config
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseStorage(
+                new MySqlStorage(
+                    configuration.GetConnectionString("Default"),
+                    new MySqlStorageOptions
+                    {
+                        QueuePollInterval = TimeSpan.FromSeconds(10),
+                        JobExpirationCheckInterval = TimeSpan.FromHours(1),
+                        CountersAggregateInterval = TimeSpan.FromMinutes(5),
+                        DashboardJobListLimit = 25000,
+                        TransactionTimeout = TimeSpan.FromMilliseconds(1),
+                        TablesPrefix = "Hangfire"
+                    }
+                )
+            ));
+        
+        services.AddHangfireServer(options => options.WorkerCount = 1);
+    }
+}
+```
+### 3.在Startup中ConfigureServices添加Hangfire服务,在Configure启动Hangfire
+```C#
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddHangFireService(Configuration);
+}
+
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    app.UseHangfireServer();//启动Hangfire服务
+    app.UseHangfireDashboard();//启动Hangfire面板
+}
+```
