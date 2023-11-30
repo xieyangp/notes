@@ -86,6 +86,12 @@ d、[FromHeader] 特性：作用：从 HTTP 头部中获取参数值。
 ## 4.[ApiController] 特性： 用于标识控制器是一个 Web API 控制器，它会对控制器行为的行为进行一些默认配置。
 ## 5.[AllowAnonymous] 特性： 允许匿名访问，即不需要身份验证。
 ## 6.[Produces] 特性： 用于指定动作方法的响应类型。
+```C#
+[Produces("application/json")]
+public IActionResult MyAction()
+{
+}
+```
 - - -
 - - -
 # partial 关键字
