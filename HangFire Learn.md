@@ -62,6 +62,30 @@ _backgroundJobClient.Schedule<IFoodDataProvider>(
 ```
 RecurringJob.AddOrUpdate("powerfuljob", () => Console.Write("Powerful!"), "0 12 1 1 *");
 ```
+### HangFire在数据库中创建的表的用途：
+```C#
+HangfireCounter: 用于存储计数器信息，这可能与Hangfire的某些统计信息相关。
+
+HangfireDistributedLock: 用于分布式锁定，确保在多个应用程序实例中不会同时执行相同的任务。
+
+HangfireHash: 用于存储哈希表数据，这可能与某些任务的关联数据有关。
+
+HangfireJob: 存储调度的任务信息，包括任务的标识符、状态、类型等。
+
+HangfireJobParameter: 用于存储与任务相关的参数信息。
+
+HangfireJobQueue: 用于存储任务队列信息，包括队列名称和相关设置。
+
+HangfireJobState: 存储任务的当前状态，例如Enqueued、Failed、Succeeded等。
+
+HangfireList: 用于存储列表数据，这可能与某些任务的关联数据有关。
+
+HangfireServer: 存储Hangfire服务器实例的信息，包括服务器标识符、最后一次活动时间等。
+
+HangfireSet: 用于存储集合数据，这可能与某些任务的关联数据有关。
+
+HangfireState: 存储任务的状态信息，与HangfireJobState可能有一些交叉，用于跟踪任务的状态历史。
+```
 ## 配置Hangfire
 ### 1.引用包
 ```
