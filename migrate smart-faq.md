@@ -58,6 +58,7 @@ public class UserQuestion : IEntity
 ## 2.[HttpGet], [HttpPost], [HttpPut], [HttpDelete], 等： 用于指定动作方法可以处理的 HTTP 请求类型。
 ```
 使用 HttpGet 的场景：
+
    读取资源： 当你的操作是读取资源或执行幂等操作（不会修改服务器状态）时，适合使用 HttpGet。例如，获取用户信息、获取博客文章等。
    
    简单的查询： 对于简单的查询，特别是当参数是通过查询字符串传递时，使用 HttpGet 是合适的。例如，通过 URL 查询过滤用户列表。
@@ -65,32 +66,29 @@ public class UserQuestion : IEntity
    无副作用： 如果操作对服务器没有副作用，即它不会改变服务器状态，使用 HttpGet 是合适的
 
 使用 HttpPost 的场景：
-   创建资源： 当你的操作是创建新资源、提交表单或进行其他可能对服务器状态有影响的操作时，应该使用 HttpPost。例如，创建新用户、提交订单等。
+
+   创建资源：当你的操作是创建新资源、提交表单或进行其他可能对服务器状态有影响的操作时，应该使用 HttpPost。例如，创建新用户、提交订单等。
    
-   修改服务器状态： 当操作对服务器状态产生更复杂的影响，比如修改资源、执行一系列操作等，应该使用 HttpPost。
+   修改服务器状态：当操作对服务器状态产生更复杂的影响，比如修改资源、执行一系列操作等，应该使用 HttpPost。
    
-   传递敏感数据： 当操作需要传递敏感数据时，使用 HttpPost 更安全。因为 HttpGet 请求的参数会附加在 URL 中，而 HttpPost 请求的参数在请求体中，相对更安全。
+   传递敏感数据：当操作需要传递敏感数据时，使用 HttpPost 更安全。因为 HttpGet 请求的参数会附加在 URL 中，而 HttpPost 请求的参数在请求体中，相对更安全。
    
-   处理复杂的表单： 当你有一个复杂的表单，包含大量数据或文件上传等，使用 HttpPost 是更合适的选择。
+   处理复杂的表单：当你有一个复杂的表单，包含大量数据或文件上传等，使用 HttpPost 是更合适的选择。
 ```
 ## 3.[FromQuery], [FromRoute], [FromBody], [FromHeader] 等： 用于从请求的不同部分获取参数。
 ```
-a、[FromQuery] 特性：作用：从查询字符串中获取参数值，通常用于 GET 请求。
+a、[FromQuery] 特性：从查询字符串中获取参数值，通常用于 GET 请求。
 
-b、[FromRoute] 特性：作用：从路由中获取参数值。
+b、[FromRoute] 特性：从路由中获取参数值。
 
-c、[FromBody] 特性：作用：从请求体中获取参数值，通常用于 POST 或 PUT 请求。
+c、[FromBody] 特性：从请求体中获取参数值，通常用于 POST 或 PUT 请求。
 
-d、[FromHeader] 特性：作用：从 HTTP 头部中获取参数值。
+d、[FromHeader] 特性：从 HTTP 头部中获取参数值。
 ```
-## 4.[ApiController] 特性： 用于标识控制器是一个 Web API 控制器，它会对控制器行为的行为进行一些默认配置。
-## 5.[AllowAnonymous] 特性： 允许匿名访问，即不需要身份验证。
-## 6.[Produces] 特性： 用于指定动作方法的响应类型。
+## 4.[ApiController] 特性: 用于标识控制器是一个Web API控制器，它会对控制器行为的行为进行一些默认配置。
+## 5.[ProducesResponseType] 特性: 指定操作方法的返回类型和HTTP响应代码的特性。
 ```C#
-[Produces("application/json")]
-public IActionResult MyAction()
-{
-}
+[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResponseType))]
 ```
 - - -
 - - -
@@ -108,5 +106,4 @@ public partial class MyClass
 {
     public void Method2(){}
 }
-
 ```
