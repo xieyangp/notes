@@ -33,6 +33,16 @@ Deleted（已删除）： 任务被删除，可能是由于某些原因，任务
 
 这个流程确保了任务的有序执行，避免了并发执行相同任务的问题。Hangfire 的工作线程池负责调度和执行任务，确保它们按照先进先出的顺序得到处理。这使得你可以方便地在后台执行一些耗时的任务，而不影响应用程序的性能和响应性。
 ```
+### hangfire任务定期检查计划机制：Hangfire Server定期检查计划，将计划的作业排入其队列，从而允许工作人员执行它们。
+```
+计划：相当于一个定时任务。
+
+Hangfire Server 定期检查： Hangfire Server 是一个独立的进程或服务，定期（通常每秒）检查计划信息。它从持久化存储中读取计划信息，查看是否有计划的作业需要被执行。这个检查过程是 Hangfire Server 在后台默默运行的。默认时间是15s，可以设置BackgroundJobServer构造函数中SchedulePollingInterval属性改变检查时间间隔。
+
+将计划的作业添加到队列： 当 Hangfire Server 检测到有计划的作业需要执行时，它将这些作业添加到队列中。这意味着这些作业将被放入待执行的队列，等待工作线程池中的工人处理。
+
+工作线程执行作业： 一旦计划的作业被添加到队列，工作线程池中的工人将开始处理这些作业。每个工人会从队列中取出一个作业，执行它，然后将结果报告回 Hangfire Server。
+```
 ### Hangfire框架是一个用于处理后台任务的开源库，它可以帮助开发人员在.NET应用程序中轻松地执行延迟任务、定时任务和重复任务。Hangfire框架的作用包括：
 
 ### 后台任务管理：Hangfire框架可以帮助开发人员管理和执行各种后台任务，包括处理队列、发送电子邮件、生成报告等。
@@ -57,8 +67,9 @@ BackgroundJob.Enqueue(() => Console.WriteLine("Hello, world!"));
 ```C#
 BackgroundJob .Schedule(
     () => Console .WriteLine( "延迟！" ),
-     TimeSpan .FromDays(7));
+     TimeSpan.FromDays(7));//七天后
 ```
+
 ## 配置Hangfire
 ### 1.引用包
 ```
