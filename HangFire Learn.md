@@ -44,6 +44,11 @@ Hangfire Server 定期检查： Hangfire Server 是一个独立的进程或服�
 工作线程执行作业： 一旦计划的作业被添加到队列，工作线程池中的工人将开始处理这些作业。每个工人会从队列中取出一个作业，执行它，然后将结果报告回 Hangfire Server。
 ```
 ### hangfire队列个方法是否能创建新的队列：
+```
+BackgroundJob.Enqueue：如果没有指定队列会创建一个新的队列
+BackgroundJob.Schedule：如果没有指定会默认加入一个队列
+ecurringJob.AddOrUpdate：如果没有指定会默认加入一个队列
+```
 ## 知识点：
 ### BackgroundJob.Enqueue：即发即忘作业仅执行一次，并且几乎在创建后立即执行。
 ```C#
