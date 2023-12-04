@@ -110,6 +110,10 @@ HangfireState: 存储任务的状态信息，与HangfireJobState可能有一些�
 
 对于不支持取消的任务，可以使用 CancellationToken.None 
 ```
+### 传递依赖关系
+```
+
+```
 ## 配置Hangfire
 ### 1.引用包
 ```
