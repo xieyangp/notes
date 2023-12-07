@@ -37,7 +37,15 @@ GetHashCode 方法：
 作用： 获取 JSON 字符串的哈希码。
 示例： int hashCode = JsonConvert.GetHashCode(json);  
 
-```
+```C#
+ var bufferedContent = await httpResponseMessage.Content.ReadAsStreamAsync();
+        var response = new TencentMeetingResponseBaseDto();
+        using (var reader = new StreamReader(bufferedContent, Encoding.UTF8))
+        {
+            var responseBody = await reader.ReadToEndAsync();
+            response = JsonConvert.DeserializeObject<TencentMeetingResponseBaseDto>(responseBody);
+        }
+
 await httpResponseMessage.Content.ReadAsStreamAsync()： 从 HttpResponseMessage 对象中获取响应内容的流，并异步读取为一个 Stream 对象。这个流是一个可缓存的内存流，称为 bufferedContent。  
 
 var response = new TencentMeetingResponseBaseDto();： 创建一个新的 TencentMeetingResponseBaseDto 对象，用于存储反序列化后的响应数据。  
