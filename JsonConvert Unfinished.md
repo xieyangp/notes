@@ -35,4 +35,16 @@ AnonymousTypeObject 方法：
 GetHashCode 方法：
 
 作用： 获取 JSON 字符串的哈希码。
-示例： int hashCode = JsonConvert.GetHashCode(json);
+示例： int hashCode = JsonConvert.GetHashCode(json);  
+
+```
+await httpResponseMessage.Content.ReadAsStreamAsync()： 从 HttpResponseMessage 对象中获取响应内容的流，并异步读取为一个 Stream 对象。这个流是一个可缓存的内存流，称为 bufferedContent。  
+
+var response = new TencentMeetingResponseBaseDto();： 创建一个新的 TencentMeetingResponseBaseDto 对象，用于存储反序列化后的响应数据。  
+
+using (var reader = new StreamReader(bufferedContent, Encoding.UTF8))： 使用 StreamReader 类以指定的编码（UTF-8）从 bufferedContent 流中创建一个读取器。这个读取器 reader 将被用于逐行读取响应内容。
+
+var responseBody = await reader.ReadToEndAsync();： 使用 ReadToEndAsync 方法异步读取整个响应内容，并将其存储在 responseBody 变量中。
+
+response = JsonConvert.DeserializeObject<TencentMeetingResponseBaseDto>(responseBody);： 使用 JsonConvert 类的 DeserializeObject 方法，将 responseBody 中的 JSON 字符串反序列化为 TencentMeetingResponseBaseDto 对象。这个对象现在包含了从 API 返回的结构化数据。
+```
