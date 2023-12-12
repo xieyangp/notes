@@ -7,7 +7,7 @@
 ### 2.当您想要将源值投影到与源结构不完全匹配的目标时，可以通过自定义成员映射进行映射；
 ```C#
 .CreateMap<Source, Destination>()
-	.ForMember(DestinationObject => DestinationObject.EventDate, SourceObject => SourceObject.MapFrom(SourceObject => SourceObject.Date.Date))
+	.ForMember(DestinationObject => DestinationObject.EventDate, SourceObject => SourceObject.MapFrom(SourceObject => SourceObject.Date))
 ```
 ### 3.当源类型中有复杂类型的时候，需要为复杂类型也进行映射配置。配置时候注意：配置类型的顺序并不重要，调用 Map 不需要指定任何内部类型映射，只需指定用于传入源值的类型映射：
 ```C#
