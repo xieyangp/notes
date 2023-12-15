@@ -252,7 +252,7 @@ cfg.CreateMap<Source, Dest>()
 [AutoMapper官网](https://docs.automapper.org/en/latest/Getting-started.html)
 ## 四、使用时遇到的问题：
 ```
-在 AutoMapper 的映射配置中，如果源类型和目标类型存在相同名称的属性，它们通常会自动映射。然而，如果映射时相同名称的属性相差层级大于一就不会自动映射需要通过ForMember指定映射；
+在 AutoMapper 的映射配置中，如果源类型和目标类型存在相同名称的属性，它们通常会自动映射。然而，如果映射时相同名称的属性是来自父类会自动映射，来自子类就不会自动映射需要通过ForMember指定映射；
 
 例如：
 
@@ -263,7 +263,7 @@ public class ClassA
     public string c { get; set; }
 }
 
-public class ClassB
+public class ClassB : ClassD
 {
     public string a { get; set; }
     public ClassC c;
@@ -272,7 +272,6 @@ public class ClassB
 public class ClassC
 {
     public string b { get; set; }
-    public ClassD d { get; set; }
 }
 
 public class ClassD
@@ -280,6 +279,5 @@ public class ClassD
     public string c { get; set; }
 }
 
-
-当配置ClassA于ClassB的映射后，c不会自动映射；
+当配置ClassA和ClassB的映射后(CreateMap<ClassB, ClassA>();)，属性b不会自动映射到, 属性c会自动映射到；
 ```
