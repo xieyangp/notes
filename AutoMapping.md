@@ -82,6 +82,7 @@ public class FoodMapping : Profile
 public class ParentSource
 {
     public int Value1 { get; set; }
+    public int Value2 { get; set; }
 }
 
 public class ChildSource : ParentSource
@@ -251,21 +252,34 @@ cfg.CreateMap<Source, Dest>()
 [AutoMapper官网](https://docs.automapper.org/en/latest/Getting-started.html)
 ## 四、使用时遇到的问题：
 ```
-在 AutoMapper 的映射配置中，如果源类型和目标类型存在相同名称的属性，它们通常会自动映射。然而，如果存在额外的映射配置，可能会导致某些属性无法正确映射。
+在 AutoMapper 的映射配置中，如果源类型和目标类型存在相同名称的属性，它们通常会自动映射。然而，如果映射时相同名称的属性相差层级大于一就不会自动映射需要通过ForMember指定映射；
 
-在你的示例中，WorkWeChatCorpApplicationCollectionForm 类中包含了与 WorkWeChatCollectionFormInfoDto 类中相同名称的属性，例如 FormId、FormTitle、FormDesc 等。由于这些属性存在于源类型和目标类型中，AutoMapper 在进行映射时可能会遇到冲突。
+例如：
 
-在这种情况下，你可以尝试在映射配置中忽略这些属性，让 AutoMapper 自动映射它们。例如：
+public class ClassA
+{
+    public string a { get; set; }
+    public string b { get; set; }
+    public string c { get; set; }
+}
 
-CreateMap<ObtainWorkWeChatCollectionFormResponseDto, WorkWeChatCorpApplicationCollectionForm>()
-    .ForMember(x => x.FormQuestionJson, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.FormInfo.FormQuestion)))
-    .ForMember(x => x.FormSettingJson, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.FormInfo.FormSetting)))
-    .ForMember(x => x.RepeatedIdJson, opt => opt.MapFrom(src => JsonConvert.SerializeObject(src.FormInfo.RepeatedId)))
-    .ForMember(dest => dest.FormId, opt => opt.Ignore())
-    .ForMember(dest => dest.FormTitle, opt => opt.Ignore())
-    .ForMember(dest => dest.FormDesc, opt => opt.Ignore());
+public class ClassB
+{
+    public string a { get; set; }
+    public ClassC c;
+}
 
-通过使用 .ForMember(dest => dest.Property, opt => opt.Ignore())，你告诉 AutoMapper 忽略映射过程中这些特定属性，以便让它们自动映射。这样，AutoMapper 将尝试将源类型的属性直接映射到目标类型，而不会受到手动配置的影响。
+public class ClassC
+{
+    public string b { get; set; }
+    public ClassD d { get; set; }
+}
 
-请确保在配置中正确指定映射，并确保源类型和目标类型之间的属性名称和类型匹配。
+public class ClassD
+{
+    public string c { get; set; }
+}
+
+
+当配置ClassA于ClassB的映射后，c不会自动映射；
 ```
