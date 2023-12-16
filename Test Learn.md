@@ -75,13 +75,13 @@ public partial class TestBase : TestUtilbase, IAsyncLifetime, IDisposable
     private readonly string _testTopic;//测试主题
     private readonly string _databaseName;//数据库名
 
-    private static readonly ConcurrentDictionary<string, IContainer> Containers = new();//储存容器
+    private static readonly ConcurrentDictionary<string, IContainer> Containers = new();//key：测试主题，value：配置容器
 
     private static readonly ConcurrentDictionary<string, bool> shouldRunDbUpDatabases = new();//是否需要运行Dbup类
 
     protected ILifetimeScope CurrentScope { get; }//生命周期范围
 
-    protected IConfiguration CurrentConfiguration => CurrentScope.Resolve<IConfiguration>();//当前配置
+    protected IConfiguration CurrentConfiguration => CurrentScope.Resolve<IConfiguration>();//get：当前生命周期内解析出配置容器
     
     protected TestBase(string testTopic, string databaseName) 
     {
@@ -99,7 +99,7 @@ public partial class TestBase : TestUtilbase, IAsyncLifetime, IDisposable
             Containers[testTopic] = root;
         }
 
-        CurrentScope = root.BeginLifetimeScope();//创建一个新的生命周期范围
+        CurrentScope = root.BeginLifetimeScope();//从根容器创建一个新的子范围。在Autofac中，范围用于管理组件和服务实例的生命周期。当在范围内解析组件时，Autofac会跟踪在该范围内创建的实例，并在范围被销毁时对它们进行处理。
 
         RunDbUpIfRequired();//如果需要运行DbUp数据库则运行它
         SetupScope(CurrentScope);//设置生命周期
