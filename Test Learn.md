@@ -391,7 +391,7 @@ public class TestUtil : TestUtilbase
 }
 ```
 ### 3.开始编写集成测试：
-#### a.创建一个以Fixture结尾的测试基础类,继承FoodFixtureBase
+#### a.创建一个以Fixture结尾的测试夹具类,继承FoodFixtureBase
 ```c#
 [Collection("Food Tests")]
 public class FoodFixtureBase : TestBase
