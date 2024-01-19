@@ -130,25 +130,25 @@ public static class HangFireExtension
     public static void AddHangFireService(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHangfire(config => config
-            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
-            .UseSimpleAssemblyNameTypeSerializer()
-            .UseRecommendedSerializerSettings()
-            .UseStorage(
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)//设置兼容性级别，指定与Hangfire版本1.7.0兼容。
+            .UseSimpleAssemblyNameTypeSerializer()//使用简单的程序集名称类型序列化器。
+            .UseRecommendedSerializerSettings()//使用建议的序列化设置。
+            .UseStorage(//配置Hangfire使用的存储后端。在这里，是用来Mysql数据库作为存储，通过MySqlStorage类进行配置。
                 new MySqlStorage(
-                    configuration.GetConnectionString("Default"),
+                    configuration.GetConnectionString("Default"),//获取连接字符串
                     new MySqlStorageOptions
                     {
-                        QueuePollInterval = TimeSpan.FromSeconds(10),
-                        JobExpirationCheckInterval = TimeSpan.FromHours(1),
-                        CountersAggregateInterval = TimeSpan.FromMinutes(5),
-                        DashboardJobListLimit = 25000,
-                        TransactionTimeout = TimeSpan.FromMilliseconds(1),
-                        TablesPrefix = "Hangfire"
+                        QueuePollInterval = TimeSpan.FromSeconds(10),//检查队列的时间间隔。
+                        JobExpirationCheckInterval = TimeSpan.FromHours(1),//作业到期检查的时间间隔。
+                        CountersAggregateInterval = TimeSpan.FromMinutes(5),//计数器聚合的时间间隔。
+                        DashboardJobListLimit = 25000,//仪表板上作业列表的限制。
+                        TransactionTimeout = TimeSpan.FromMilliseconds(1),//事务超过时间
+                        TablesPrefix = "Hangfire"//表的前缀
                     }
                 )
             ));
         
-        services.AddHangfireServer(options => options.WorkerCount = 1);
+        services.AddHangfireServer(options => options.WorkerCount = 1);//启用Hangfire服务器，它处理后台任务。options.WorkerCount设置了同时处理任务的工作线程数量。
     }
 }
 ```
