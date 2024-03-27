@@ -1,0 +1,1 @@
+修改GetMeetingInfoPermission的权限
