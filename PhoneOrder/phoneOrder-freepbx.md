@@ -6,6 +6,9 @@
 ### 3.安装LAMP服务器，再安装完后可以执行php -v查看php的版本是否为 7.4，如果不是7.4在之后安装FreePBX会出现版本不适配的情况
 ![4](https://github.com/xieyangp/notes/blob/main/image/Freepbx/1721376727455.jpg)
 ### 4.之后安装FreePBX按照教程进行即可。
+```
+需要注意：执行到./install -n会缺少一个php -m | grep pdo_mysql
+```
 ### 5.测试时出现Macro 扩展未加载的情况。
 ![4](https://github.com/xieyangp/notes/blob/main/image/Freepbx/1721788493301.jpg)
 #### 5.1.找到asterisk文件夹，打开
