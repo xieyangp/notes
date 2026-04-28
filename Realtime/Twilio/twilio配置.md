@@ -1,5 +1,5 @@
 ## 1.配置Twilio的webhook
-  
+![Twilio](image/Twilio/Twilio_Configure_1.jpg)
 
 ## 2.Twilio的Webhook机制
 ###  电话进入 -> 访问 URL -> 服务器返回 TwiML -> Twilio 执行指令。
